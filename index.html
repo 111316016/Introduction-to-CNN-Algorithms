@@ -1,11 +1,1684 @@
 <!DOCTYPE html>
-
-<html>
+<html lang="zh-TW">
 <head>
-    <title>Introduction to CNN Algorithms</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CNN 演算法介紹 | 111316016</title>
+    <meta name="description" content="卷積神經網路（CNN）演算法完整介紹，涵蓋基本概念、運作流程、應用案例與學習反思。">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;600;700;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ===== CSS RESET & ROOT VARIABLES ===== */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            /* Light palette */
+            --clr-bg:           #f4f6fb;
+            --clr-bg-alt:       #eef1f8;
+            --clr-surface:      #ffffff;
+            --clr-surface-2:    #f0f4ff;
+            --clr-border:       rgba(60,80,160,0.10);
+            --clr-border-strong:rgba(60,80,160,0.20);
+            /* Brand */
+            --clr-primary:      #3a6ff4;
+            --clr-primary-d:    #2353cc;
+            --clr-primary-l:    #6b96f9;
+            --clr-accent:       #00b894;
+            --clr-accent-2:     #7c5cfc;
+            --clr-warning:      #f59e0b;
+            --clr-danger:       #ef4444;
+            /* Text */
+            --clr-text:         #1a2340;
+            --clr-text-muted:   #4a5578;
+            --clr-text-subtle:  #8492b0;
+            /* Shadows */
+            --shadow-sm:  0 1px 4px rgba(30,50,120,0.07);
+            --shadow-md:  0 4px 20px rgba(30,50,120,0.10);
+            --shadow-lg:  0 8px 40px rgba(30,50,120,0.14);
+            --shadow-glow:0 0 32px rgba(58,111,244,0.18);
+            /* Misc */
+            --radius-sm: 8px;
+            --radius-md: 14px;
+            --radius-lg: 22px;
+            --font-body: 'Noto Sans TC', 'Inter', sans-serif;
+            --transition: 0.28s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--clr-bg);
+            color: var(--clr-text);
+            line-height: 1.8;
+            font-size: 16px;
+            overflow-x: hidden;
+        }
+
+        /* ===== SCROLLBAR ===== */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--clr-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--clr-primary-l); border-radius: 3px; }
+
+        /* ===== SELECTION ===== */
+        ::selection { background: rgba(58,111,244,0.2); color: var(--clr-primary-d); }
+
+        /* ===== LAYOUT ===== */
+        .container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+
+        /* ===== TAGS ===== */
+        .tag {
+            display: inline-block; font-size: 11px; font-weight: 700;
+            letter-spacing: .1em; text-transform: uppercase; padding: 4px 12px;
+            border-radius: 20px; border: 1px solid rgba(58,111,244,0.3);
+            background: rgba(58,111,244,0.08); color: var(--clr-primary-d);
+            transition: var(--transition);
+        }
+        .tag:hover { background: rgba(58,111,244,0.15); transform: translateY(-1px); }
+        .tag--teal   { background: rgba(0,184,148,0.09); color:#007a62; border-color:rgba(0,184,148,0.28); }
+        .tag--teal:hover { background: rgba(0,184,148,0.16); }
+        .tag--purple { background: rgba(124,92,252,0.09); color:#5634c0; border-color:rgba(124,92,252,0.28); }
+        .tag--purple:hover { background: rgba(124,92,252,0.16); }
+        .tag--yellow { background: rgba(245,158,11,0.09); color:#b45309; border-color:rgba(245,158,11,0.28); }
+
+        /* ===== NAV ===== */
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            background: rgba(255,255,255,0.88);
+            backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--clr-border);
+            box-shadow: 0 2px 16px rgba(30,60,160,0.06);
+            transition: var(--transition);
+        }
+        .nav--scrolled { box-shadow: 0 4px 24px rgba(30,60,160,0.12); }
+        .nav__inner {
+            display: flex; align-items: center; justify-content: space-between;
+            height: 60px; max-width: 1100px; margin: 0 auto; padding: 0 24px;
+        }
+        .nav__brand {
+            display: flex; align-items: center; gap: 10px; text-decoration: none;
+            font-weight: 800; font-size: 15px; color: var(--clr-text);
+        }
+        .nav__brand-icon {
+            width: 32px; height: 32px; border-radius: 8px;
+            background: linear-gradient(135deg, var(--clr-primary), var(--clr-accent));
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; box-shadow: 0 2px 8px rgba(58,111,244,0.3);
+            transition: var(--transition);
+        }
+        .nav__brand:hover .nav__brand-icon { transform: rotate(8deg) scale(1.1); }
+        .nav__links { display: flex; gap: 2px; list-style: none; }
+        .nav__links a {
+            text-decoration: none; color: var(--clr-text-muted); font-size: 13px;
+            font-weight: 500; padding: 6px 12px; border-radius: var(--radius-sm);
+            transition: var(--transition); position: relative;
+        }
+        .nav__links a::after {
+            content: ''; position: absolute; bottom: 4px; left: 50%; right: 50%;
+            height: 2px; background: var(--clr-primary); border-radius: 2px;
+            transition: var(--transition);
+        }
+        .nav__links a:hover { color: var(--clr-primary); background: rgba(58,111,244,0.07); }
+        .nav__links a:hover::after { left: 12px; right: 12px; }
+        .nav__links a.active { color: var(--clr-primary); font-weight: 600; }
+
+        /* ===== SIDE PROGRESS ===== */
+        .section-progress {
+            position: fixed; right: 18px; top: 50%; transform: translateY(-50%);
+            display: flex; flex-direction: column; gap: 10px; z-index: 50;
+        }
+        .progress-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: rgba(58,111,244,0.2); border: 1.5px solid rgba(58,111,244,0.3);
+            cursor: pointer; transition: var(--transition);
+        }
+        .progress-dot:hover { background: var(--clr-primary-l); transform: scale(1.3); }
+        .progress-dot.active {
+            background: var(--clr-primary); border-color: var(--clr-primary);
+            height: 22px; border-radius: 4px; box-shadow: 0 0 8px rgba(58,111,244,0.4);
+        }
+        @media (max-width: 1100px) { .section-progress { display: none; } }
+
+        /* ===== HERO ===== */
+        .hero {
+            position: relative; min-height: 100vh;
+            display: flex; align-items: center; overflow: hidden;
+            padding: 120px 24px 80px;
+            background: linear-gradient(140deg, #e8eeff 0%, #f4f6fb 40%, #e8f8f2 100%);
+        }
+        .hero__orb {
+            position: absolute; border-radius: 50%; filter: blur(70px);
+            pointer-events: none; animation: orbFloat 8s ease-in-out infinite;
+        }
+        .hero__orb--blue  { width: 480px; height: 480px; top: -100px; right: -80px;
+            background: radial-gradient(circle, rgba(58,111,244,0.18) 0%, transparent 70%); }
+        .hero__orb--teal  { width: 360px; height: 360px; bottom: -60px; left: -60px;
+            background: radial-gradient(circle, rgba(0,184,148,0.14) 0%, transparent 70%);
+            animation-delay: -3s; }
+        .hero__orb--purple{ width: 260px; height: 260px; top: 40%; right: 20%;
+            background: radial-gradient(circle, rgba(124,92,252,0.10) 0%, transparent 70%);
+            animation-delay: -5s; }
+        @keyframes orbFloat {
+            0%,100% { transform: translateY(0) scale(1); }
+            50%      { transform: translateY(-30px) scale(1.04); }
+        }
+        .hero__grid {
+            position: absolute; inset: 0;
+            background-image: linear-gradient(rgba(58,111,244,0.04) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(58,111,244,0.04) 1px, transparent 1px);
+            background-size: 48px 48px;
+            mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+        }
+        .hero__content {
+            position: relative; z-index: 1; text-align: center;
+            max-width: 780px; margin: 0 auto;
+        }
+        .hero__eyebrow {
+            display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;
+            margin-bottom: 28px;
+            animation: fadeInDown .7s ease both;
+        }
+        .hero__title {
+            font-size: clamp(2.2rem, 5.5vw, 3.8rem); font-weight: 900;
+            line-height: 1.18; letter-spacing: -.02em; margin-bottom: 22px;
+            color: var(--clr-text);
+            animation: fadeInDown .7s .1s ease both;
+        }
+        .hero__title .gradient-text {
+            background: linear-gradient(135deg, var(--clr-primary) 0%, var(--clr-accent) 55%, var(--clr-accent-2) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .hero__subtitle {
+            font-size: 1.05rem; color: var(--clr-text-muted); max-width: 560px;
+            margin: 0 auto 40px; line-height: 1.85;
+            animation: fadeInDown .7s .2s ease both;
+        }
+        .hero__card {
+            display: inline-flex; gap: 28px; flex-wrap: wrap; justify-content: center;
+            background: rgba(255,255,255,0.8); border: 1px solid var(--clr-border-strong);
+            border-radius: var(--radius-lg); padding: 20px 36px;
+            box-shadow: var(--shadow-md); backdrop-filter: blur(8px);
+            animation: fadeInDown .7s .3s ease both;
+            transition: var(--transition);
+        }
+        .hero__card:hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+        .hero__card-item { text-align: center; }
+        .hero__card-item .label {
+            font-size: 10px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .1em; color: var(--clr-text-subtle); margin-bottom: 4px;
+        }
+        .hero__card-item .value {
+            font-size: 1.05rem; font-weight: 800; color: var(--clr-primary-d);
+        }
+        .hero__card-divider { width: 1px; height: 36px; background: var(--clr-border-strong); }
+        .hero__scroll-hint {
+            position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            color: var(--clr-text-subtle); font-size: 10px; font-weight: 600;
+            letter-spacing: .1em; text-transform: uppercase;
+            animation: bounceY 2.5s ease-in-out infinite;
+        }
+        .hero__scroll-hint::before {
+            content: ''; width: 1px; height: 32px;
+            background: linear-gradient(to bottom, transparent, var(--clr-primary));
+        }
+        @keyframes bounceY {
+            0%,100% { transform: translateX(-50%) translateY(0); }
+            50%      { transform: translateX(-50%) translateY(-10px); }
+        }
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== SECTION ===== */
+        .section { padding: 80px 0; }
+        .section + .section { border-top: 1px solid var(--clr-border); }
+        .section__header { margin-bottom: 44px; }
+        .section__label {
+            display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+        }
+        .task-num {
+            display: flex; align-items: center; justify-content: center;
+            width: 28px; height: 28px; border-radius: 8px;
+            font-size: 12px; font-weight: 800; color: #fff; flex-shrink: 0;
+            background: linear-gradient(135deg, var(--clr-primary), var(--clr-accent));
+            box-shadow: 0 2px 8px rgba(58,111,244,0.3);
+        }
+        .task-name {
+            font-size: 12px; font-weight: 600; color: var(--clr-text-subtle);
+            text-transform: uppercase; letter-spacing: .08em;
+        }
+        .section__title {
+            font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; letter-spacing: -.01em;
+            line-height: 1.3; color: var(--clr-text);
+        }
+        .section__desc { margin-top: 10px; font-size: .92rem; color: var(--clr-text-muted); max-width: 640px; }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: var(--clr-surface); border: 1px solid var(--clr-border);
+            border-radius: var(--radius-lg); padding: 28px 32px;
+            box-shadow: var(--shadow-sm); transition: var(--transition);
+        }
+        .card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); border-color: var(--clr-border-strong); }
+        .card--accent {
+            background: linear-gradient(135deg, rgba(58,111,244,0.04), rgba(0,184,148,0.03));
+            border-color: rgba(58,111,244,0.15);
+        }
+        .card--teal  { background: linear-gradient(135deg, rgba(0,184,148,0.05), rgba(58,111,244,0.02)); border-color: rgba(0,184,148,0.18); }
+        .card--purple{ background: linear-gradient(135deg, rgba(124,92,252,0.05), rgba(58,111,244,0.02)); border-color: rgba(124,92,252,0.18); }
+
+        /* ===== SECTION 1 ===== */
+        .lead-text { font-size: 1rem; line-height: 1.9; color: var(--clr-text-muted); margin-bottom: 22px; }
+        .lead-text strong { color: var(--clr-primary-d); font-weight: 700; }
+
+        .problems-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 32px; }
+        .problem-item {
+            display: flex; gap: 16px; align-items: flex-start;
+            background: var(--clr-surface); border: 1px solid var(--clr-border);
+            border-radius: var(--radius-md); padding: 18px 22px;
+            box-shadow: var(--shadow-sm); transition: var(--transition);
+            cursor: default;
+        }
+        .problem-item:hover {
+            border-color: var(--clr-primary-l); box-shadow: 0 4px 16px rgba(58,111,244,0.12);
+            transform: translateX(4px);
+        }
+        .problem-item__badge {
+            flex-shrink: 0; width: 36px; height: 36px; border-radius: var(--radius-sm);
+            display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+            background: rgba(58,111,244,0.09);
+        }
+        .problem-item__title { font-size: .93rem; font-weight: 700; color: var(--clr-text); margin-bottom: 4px; }
+        .problem-item__desc  { font-size: .85rem; color: var(--clr-text-muted); line-height: 1.7; }
+        .problem-item__desc strong { color: var(--clr-primary-d); }
+
+        /* Flow Steps */
+        .flow-steps { display: flex; flex-direction: column; gap: 0; }
+        .flow-step { display: flex; gap: 18px; align-items: flex-start; position: relative; }
+        .flow-step:not(:last-child)::after {
+            content: ''; position: absolute; left: 19px; top: 44px;
+            width: 2px; height: calc(100% - 16px);
+            background: linear-gradient(to bottom, rgba(58,111,244,0.3), transparent);
+        }
+        .flow-step__num {
+            flex-shrink: 0; width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 800; position: relative; z-index: 1;
+            background: rgba(58,111,244,0.1); border: 2px solid rgba(58,111,244,0.25);
+            color: var(--clr-primary); transition: var(--transition);
+        }
+        .flow-step:hover .flow-step__num {
+            background: var(--clr-primary); color: #fff;
+            box-shadow: 0 0 12px rgba(58,111,244,0.35);
+        }
+        .flow-step__content { padding: 8px 0 26px; }
+        .flow-step__title { font-size: .93rem; font-weight: 700; color: var(--clr-text); margin-bottom: 5px; }
+        .flow-step__desc  { font-size: .84rem; color: var(--clr-text-muted); line-height: 1.72; }
+
+        /* Intro grid */
+        .intro-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 0; }
+        @media (max-width: 640px) { .intro-grid { grid-template-columns: 1fr; } }
+        .intro-card {
+            background: var(--clr-surface); border: 1px solid var(--clr-border);
+            border-radius: var(--radius-md); padding: 22px;
+            box-shadow: var(--shadow-sm); transition: var(--transition);
+            cursor: default;
+        }
+        .intro-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); border-color: var(--clr-border-strong); }
+        .intro-card__icon  { font-size: 1.6rem; margin-bottom: 10px; }
+        .intro-card__title { font-size: .82rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--clr-primary); margin-bottom: 8px; }
+        .intro-card__text  { font-size: .85rem; color: var(--clr-text-muted); line-height: 1.72; }
+
+        /* ===== AI TABLE ===== */
+        .ai-table-wrapper { overflow-x: auto; border-radius: var(--radius-md); border: 1px solid var(--clr-border); box-shadow: var(--shadow-sm); }
+        .ai-table { width: 100%; border-collapse: collapse; font-size: .87rem; }
+        .ai-table thead { background: var(--clr-surface-2); }
+        .ai-table th {
+            padding: 13px 16px; text-align: left; font-size: 11px; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .08em; color: var(--clr-text-subtle);
+            border-bottom: 1px solid var(--clr-border); white-space: nowrap;
+        }
+        .ai-table td {
+            padding: 15px 16px; border-bottom: 1px solid rgba(60,80,160,0.05);
+            color: var(--clr-text-muted); line-height: 1.65; vertical-align: top;
+            transition: var(--transition);
+        }
+        .ai-table tr:last-child td { border-bottom: none; }
+        .ai-table tr:hover td { background: rgba(58,111,244,0.03); }
+        .ai-table td:first-child { color: var(--clr-text); font-weight: 700; font-size: .9rem; }
+        .ai-table td strong { color: var(--clr-primary-d); }
+
+        /* ===== DIALOGUE ===== */
+        .dialogue { display: flex; flex-direction: column; gap: 14px; margin-top: 24px; }
+        .dialogue__msg { display: flex; gap: 12px; align-items: flex-start; }
+        .dialogue__msg--ai { flex-direction: row-reverse; }
+        .dialogue__avatar {
+            width: 34px; height: 34px; border-radius: 50%; display: flex;
+            align-items: center; justify-content: center; font-size: 13px;
+            font-weight: 800; flex-shrink: 0;
+        }
+        .avatar--user { background: linear-gradient(135deg,var(--clr-accent-2),var(--clr-primary)); color:#fff; }
+        .avatar--ai   { background: linear-gradient(135deg,var(--clr-primary),var(--clr-accent)); color:#fff; }
+        .dialogue__bubble {
+            max-width: 80%; padding: 13px 16px; border-radius: var(--radius-md);
+            font-size: .855rem; line-height: 1.72;
+        }
+        .bubble--user  { background: rgba(124,92,252,0.08); border: 1px solid rgba(124,92,252,0.18); color: var(--clr-text-muted); }
+        .bubble--ai    { background: rgba(58,111,244,0.07); border: 1px solid rgba(58,111,244,0.18); color: var(--clr-text-muted); }
+        .bubble--ai strong { color: var(--clr-primary-d); }
+
+        /* ===== VERIFY ===== */
+        .verify-flow { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: center; }
+        @media (max-width: 640px) { .verify-flow { grid-template-columns: 1fr; } }
+        .verify-box {
+            background: var(--clr-surface); border: 1px solid var(--clr-border);
+            border-radius: var(--radius-md); padding: 18px 20px; box-shadow: var(--shadow-sm);
+        }
+        .verify-box__label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 9px; }
+        .verify-box__content { font-size: .85rem; color: var(--clr-text-muted); line-height: 1.7; }
+        .verify-box__content strong { color: var(--clr-text); }
+        .verify-arrow { font-size: 22px; color: var(--clr-primary); text-align: center; }
+
+        .source-cite {
+            display: flex; gap: 12px; align-items: flex-start;
+            background: rgba(0,184,148,0.06); border: 1px solid rgba(0,184,148,0.2);
+            border-radius: var(--radius-md); padding: 16px 20px; margin-top: 22px;
+        }
+        .source-cite__icon { font-size: 1.2rem; flex-shrink: 0; }
+        .source-cite__text { font-size: .855rem; color: var(--clr-text-muted); line-height: 1.72; }
+        .source-cite__text a { color: var(--clr-accent); text-decoration: none; font-weight: 600; }
+        .source-cite__text a:hover { text-decoration: underline; }
+
+        /* ===== HIGHLIGHT BOX ===== */
+        .highlight-box {
+            border-left: 3px solid var(--clr-primary);
+            background: linear-gradient(90deg,rgba(58,111,244,0.06),transparent);
+            border-radius: 0 var(--radius-md) var(--radius-md) 0;
+            padding: 16px 20px; font-size: .88rem; color: var(--clr-text-muted); line-height: 1.75;
+        }
+        .highlight-box strong { color: var(--clr-primary-d); }
+        .highlight-box--teal   { border-left-color:var(--clr-accent);    background:linear-gradient(90deg,rgba(0,184,148,0.07),transparent); }
+        .highlight-box--teal strong   { color:#007a62; }
+        .highlight-box--purple { border-left-color:var(--clr-accent-2);  background:linear-gradient(90deg,rgba(124,92,252,0.07),transparent); }
+
+        /* ===== ARCHITECTURE DIAGRAM ===== */
+        .viz-container {
+            background: var(--clr-surface); border: 1px solid var(--clr-border);
+            border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-sm);
+        }
+        .viz-header {
+            background: var(--clr-surface-2); padding: 13px 20px;
+            border-bottom: 1px solid var(--clr-border);
+            display: flex; align-items: center; gap: 8px;
+            font-size: 13px; font-weight: 600; color: var(--clr-text-muted);
+        }
+        .viz-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .cnn-arch-diagram { padding: 32px 24px; overflow-x: auto; }
+        .cnn-layers { display: flex; align-items: center; gap: 0; min-width: 640px; }
+        .cnn-layer { display: flex; flex-direction: column; align-items: center; }
+        .layer-block { display: flex; align-items: flex-end; gap: 3px; height: 100px; }
+        .layer-slice {
+            border-radius: 3px; transition: var(--transition);
+            cursor: pointer;
+        }
+        .layer-slice:hover { filter: brightness(1.15) saturate(1.2); transform: scaleY(1.05); }
+        .layer-info { margin-top: 12px; text-align: center; }
+        .layer-info__name { font-size: 11px; font-weight: 700; color: var(--clr-text); }
+        .layer-info__desc { font-size: 10px; color: var(--clr-text-subtle); margin-top: 2px; }
+        .layer-connector { display: flex; align-items: center; padding: 0 6px; padding-bottom: 50px; color: var(--clr-text-subtle); font-size: 20px; }
+
+        /* ===== INTERACTIVE CNN DIAGRAM (ANIMATED) ===== */
+        .cnn-interactive {
+            background: var(--clr-surface); border: 1px solid var(--clr-border);
+            border-radius: var(--radius-lg); padding: 28px; margin-top: 28px;
+            box-shadow: var(--shadow-sm);
+        }
+        .cnn-interactive__title {
+            font-size: .85rem; font-weight: 700; color: var(--clr-text-subtle);
+            text-transform: uppercase; letter-spacing: .08em; margin-bottom: 20px;
+            text-align: center;
+        }
+        .cnn-step-tabs {
+            display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;
+            margin-bottom: 22px;
+        }
+        .cnn-step-tab {
+            padding: 7px 16px; border-radius: 20px; font-size: 12px; font-weight: 700;
+            border: 1.5px solid var(--clr-border-strong); background: var(--clr-surface-2);
+            color: var(--clr-text-muted); cursor: pointer; transition: var(--transition);
+        }
+        .cnn-step-tab:hover { border-color: var(--clr-primary); color: var(--clr-primary); }
+        .cnn-step-tab.active {
+            background: var(--clr-primary); color: #fff;
+            border-color: var(--clr-primary); box-shadow: 0 2px 10px rgba(58,111,244,0.3);
+        }
+        .cnn-step-panel { display: none; animation: panelIn .3s ease; }
+        .cnn-step-panel.active { display: block; }
+        @keyframes panelIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .cnn-step-panel__inner {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start;
+        }
+        @media (max-width: 600px) { .cnn-step-panel__inner { grid-template-columns: 1fr; } }
+        .cnn-step-visual {
+            background: var(--clr-surface-2); border: 1px solid var(--clr-border);
+            border-radius: var(--radius-md); padding: 20px; min-height: 140px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .cnn-step-text h4 { font-size: .95rem; font-weight: 700; color: var(--clr-text); margin-bottom: 10px; }
+        .cnn-step-text p  { font-size: .86rem; color: var(--clr-text-muted); line-height: 1.75; }
+        .cnn-step-text p strong { color: var(--clr-primary-d); }
+
+        /* Pixel grid for visual */
+        .pixel-grid { display: inline-grid; gap: 2px; }
+        .pixel {
+            width: 22px; height: 22px; border-radius: 3px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 9px; font-weight: 700; transition: var(--transition);
+        }
+        .pixel:hover { transform: scale(1.15); }
+
+        /* ===== CONVOLUTION MATRIX DEMO ===== */
+        .conv-demo { overflow-x: auto; }
+        .conv-row {
+            display: grid; gap: 10px;
+            grid-template-columns: 1fr auto 1fr auto 1fr;
+            align-items: center;
+        }
+        @media (max-width:600px) { .conv-row { grid-template-columns: 1fr; } }
+        .matrix-label {
+            font-size: 10px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .08em; color: var(--clr-text-subtle); margin-bottom: 8px; text-align: center;
+        }
+        .matrix-grid { display: inline-grid; gap: 3px; }
+        .matrix-cell {
+            width: 34px; height: 34px; border-radius: 5px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 11px; font-weight: 700; transition: var(--transition);
+            cursor: default;
+        }
+        .matrix-cell:hover { transform: scale(1.1); box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+        .conv-op { font-size: 22px; color: var(--clr-text-subtle); text-align: center; }
+
+        /* ===== CASES ===== */
+        .cases-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(250px,1fr)); gap: 18px; }
+        .case-card {
+            background: var(--clr-surface); border: 1px solid var(--clr-border);
+            border-radius: var(--radius-lg); padding: 26px 22px;
+            box-shadow: var(--shadow-sm); transition: var(--transition);
+            position: relative; overflow: hidden; cursor: default;
+        }
+        .case-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0;
+            height: 3px; border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+            transition: var(--transition);
+        }
+        .case-card--blue::before   { background: linear-gradient(90deg,var(--clr-primary),var(--clr-accent)); }
+        .case-card--teal::before   { background: linear-gradient(90deg,var(--clr-accent),#06b6d4); }
+        .case-card--purple::before { background: linear-gradient(90deg,var(--clr-accent-2),var(--clr-primary)); }
+        .case-card--yellow::before { background: linear-gradient(90deg,var(--clr-warning),#f97316); }
+        .case-card:hover {
+            transform: translateY(-5px); box-shadow: var(--shadow-lg);
+            border-color: var(--clr-border-strong);
+        }
+        .case-card:hover::before { height: 5px; }
+        .case-card__emoji  { font-size: 2.2rem; margin-bottom: 12px; display: block;
+            transition: var(--transition);
+        }
+        .case-card:hover .case-card__emoji { transform: scale(1.15) rotate(-5deg); }
+        .case-card__title  { font-size: .97rem; font-weight: 700; color: var(--clr-text); margin-bottom: 8px; }
+        .case-card__desc   { font-size: .845rem; color: var(--clr-text-muted); line-height: 1.72; }
+        .case-card__examples { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 6px; }
+        .example-chip {
+            font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+            background: var(--clr-bg-alt); color: var(--clr-text-subtle);
+            border: 1px solid var(--clr-border); transition: var(--transition);
+        }
+        .case-card:hover .example-chip { border-color: var(--clr-border-strong); }
+
+        /* ===== REFLECTION ===== */
+        .reflection-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+        @media (max-width: 640px) { .reflection-grid { grid-template-columns: 1fr; } }
+        .reflection-item {
+            background: var(--clr-surface); border: 1px solid var(--clr-border);
+            border-radius: var(--radius-md); padding: 22px;
+            box-shadow: var(--shadow-sm); transition: var(--transition);
+        }
+        .reflection-item:hover { box-shadow: var(--shadow-md); border-color: var(--clr-border-strong); transform: translateY(-2px); }
+        .reflection-item__icon  { font-size: 1.5rem; margin-bottom: 10px; }
+        .reflection-item__title { font-size: .9rem; font-weight: 700; color: var(--clr-text); margin-bottom: 8px; }
+        .reflection-item__text  { font-size: .85rem; color: var(--clr-text-muted); line-height: 1.78; }
+        .reflection-item__text strong { color: var(--clr-text); }
+        .reflection-summary {
+            background: linear-gradient(135deg, rgba(58,111,244,0.06), rgba(0,184,148,0.05));
+            border: 1px solid rgba(58,111,244,0.18); border-radius: var(--radius-md); padding: 22px 26px;
+        }
+        .reflection-summary__text { font-size: .9rem; color: var(--clr-text-muted); line-height: 1.85; }
+        .reflection-summary__text strong { color: var(--clr-primary-d); }
+
+        /* ===== DIVIDER ===== */
+        .divider { height: 1px; background: linear-gradient(90deg,transparent,var(--clr-border),transparent); margin: 36px 0; }
+
+        /* ===== FOOTER ===== */
+        .footer { border-top: 1px solid var(--clr-border); padding: 36px 24px; text-align: center; background: var(--clr-surface); }
+        .footer__text { font-size: .8rem; color: var(--clr-text-subtle); line-height: 1.85; }
+        .footer__text strong { color: var(--clr-text-muted); }
+
+        /* ===== SCROLL REVEAL ===== */
+        .reveal {
+            opacity: 0; transform: translateY(22px);
+            transition: opacity .55s ease, transform .55s ease;
+        }
+        .reveal.revealed { opacity: 1; transform: translateY(0); }
+        .reveal-left  { opacity: 0; transform: translateX(-22px); transition: opacity .55s ease, transform .55s ease; }
+        .reveal-left.revealed { opacity: 1; transform: translateX(0); }
+        .reveal-right { opacity: 0; transform: translateX(22px); transition: opacity .55s ease, transform .55s ease; }
+        .reveal-right.revealed { opacity: 1; transform: translateX(0); }
+
+        /* ===== RIPPLE ===== */
+        .ripple-host { position: relative; overflow: hidden; }
+        .ripple-host .ripple {
+            position: absolute; border-radius: 50%;
+            transform: scale(0); animation: rippleAnim .5s linear;
+            background: rgba(58,111,244,0.18); pointer-events: none;
+        }
+        @keyframes rippleAnim {
+            to { transform: scale(4); opacity: 0; }
+        }
+
+        /* ===== TOOLTIP ===== */
+        [data-tip] { position: relative; cursor: help; }
+        [data-tip]::after {
+            content: attr(data-tip);
+            position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%) scale(.9);
+            background: var(--clr-text); color: #fff; font-size: 11px; font-weight: 500;
+            padding: 5px 10px; border-radius: 6px; white-space: nowrap;
+            opacity: 0; pointer-events: none; transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        [data-tip]:hover::after { opacity: 1; transform: translateX(-50%) scale(1); }
+
+        /* ===== NAV MOBILE ===== */
+        @media (max-width: 768px) {
+            .nav__links { display: none; }
+            .hero { padding: 100px 20px 60px; }
+            .section { padding: 56px 0; }
+        }
+    </style>
 </head>
 <body>
-    <h1>Introduction to CNN Algorithms</h1>
-    <p>This is a simple HTML page.</p>
+
+<!-- ===== NAV ===== -->
+<nav class="nav" id="main-nav">
+    <div class="nav__inner">
+        <a href="#hero" class="nav__brand">
+            <span class="nav__brand-icon">🧠</span>
+            CNN 演算法介紹
+        </a>
+        <ul class="nav__links">
+            <li><a href="#intro"      id="nav-intro">演算法介紹</a></li>
+            <li><a href="#ai-record"  id="nav-ai">AI 學習紀錄</a></li>
+            <li><a href="#verify"     id="nav-verify">查證與修正</a></li>
+            <li><a href="#visualize"  id="nav-viz">視覺化</a></li>
+            <li><a href="#cases"      id="nav-cases">應用案例</a></li>
+            <li><a href="#reflection" id="nav-ref">學習反思</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- ===== SIDE PROGRESS ===== -->
+<nav class="section-progress" id="section-progress" aria-label="頁面進度">
+    <div class="progress-dot active" data-target="hero"       title="首頁"></div>
+    <div class="progress-dot"        data-target="intro"      title="演算法介紹"></div>
+    <div class="progress-dot"        data-target="ai-record"  title="AI 學習紀錄"></div>
+    <div class="progress-dot"        data-target="verify"     title="查證與修正"></div>
+    <div class="progress-dot"        data-target="visualize"  title="視覺化"></div>
+    <div class="progress-dot"        data-target="cases"      title="應用案例"></div>
+    <div class="progress-dot"        data-target="reflection" title="學習反思"></div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="hero">
+    <div class="hero__orb hero__orb--blue"></div>
+    <div class="hero__orb hero__orb--teal"></div>
+    <div class="hero__orb hero__orb--purple"></div>
+    <div class="hero__grid"></div>
+    <div class="hero__content">
+        <div class="hero__eyebrow">
+            <span class="tag">Deep Learning</span>
+            <span class="tag--teal">Computer Vision</span>
+            <span class="tag--purple">期末評量</span>
+        </div>
+        <h1 class="hero__title">
+            卷積神經網路<br>
+            <span class="gradient-text">Convolutional Neural Network</span>
+        </h1>
+        <p class="hero__subtitle">
+            深入探索 CNN 的運作原理、架構設計與實際應用場景，<br>
+            理解這項改變電腦視覺領域的核心技術。
+        </p>
+        <div class="hero__card">
+            <div class="hero__card-item">
+                <div class="label">學號</div>
+                <div class="value">111316016</div>
+            </div>
+            <div class="hero__card-divider"></div>
+            <div class="hero__card-item">
+                <div class="label">主題</div>
+                <div class="value">CNN 演算法</div>
+            </div>
+            <div class="hero__card-divider"></div>
+            <div class="hero__card-item">
+                <div class="label">截止日期</div>
+                <div class="value">2025/06/07</div>
+            </div>
+        </div>
+    </div>
+    <div class="hero__scroll-hint">Scroll</div>
+</section>
+
+<!-- ===== MAIN ===== -->
+<main>
+
+<!-- ======================================
+     SECTION 1 — 演算法介紹
+======================================= -->
+<section class="section" id="intro">
+<div class="container">
+    <div class="section__header reveal">
+        <div class="section__label">
+            <span class="task-num">1</span>
+            <span class="task-name">Task 01 · 演算法理解（佔 30%）</span>
+        </div>
+        <h2 class="section__title">演算法介紹：什麼是 CNN？</h2>
+        <p class="section__desc">理解卷積神經網路的核心概念、解決問題的方式，以及其基本運作流程。</p>
+    </div>
+
+    <!-- 1.1 -->
+    <h3 class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+        <span style="opacity:.5;">1.1</span> 定義與背景
+    </h3>
+    <p class="lead-text reveal">
+        <strong>卷積神經網路（Convolutional Neural Network，簡稱 CNN）</strong>是一種深度學習演算法，專門用來處理具有「網格狀結構」的資料，而最常見的應用對象就是影像。CNN 的設計靈感源自人類的視覺神經系統——人類的視覺皮層中，不同區域的神經元只對視野中特定範圍的刺激有反應，CNN 正是模仿這種「局部感知」的機制。
+    </p>
+    <p class="lead-text reveal">
+        1998 年，Yann LeCun 等人發表了 LeNet 架構，將 CNN 應用於手寫數字辨識，奠定了現代 CNN 的基礎。如今，CNN 已成為<strong>電腦視覺（Computer Vision）</strong>領域中最核心的技術之一，廣泛應用於人臉辨識、醫療影像分析、自動駕駛等場景。
+    </p>
+
+    <div class="divider"></div>
+
+    <!-- 1.2 -->
+    <h3 class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+        <span style="opacity:.5;">1.2</span> 主要解決的問題
+    </h3>
+    <p class="reveal" style="font-size:.9rem;color:var(--clr-text-muted);margin-bottom:18px;line-height:1.75;">
+        傳統神經網路在處理影像時面臨三大根本困難，CNN 針對這些問題提出了有效的解決方案：
+    </p>
+    <div class="problems-list">
+        <div class="problem-item ripple-host reveal">
+            <div class="problem-item__badge">📦</div>
+            <div>
+                <div class="problem-item__title">維度爆炸與計算成本過高</div>
+                <div class="problem-item__desc">傳統神經網路會先把圖片「拉平」成一維向量再輸入。以一張 256×256 的彩色圖片為例，就有超過 19 萬個像素值，若直接接全連接層，參數量極其龐大。CNN 透過<strong>參數共享（parameter sharing）</strong>機制，用同一組卷積核掃描整張圖片，大幅降低了模型的參數數量。</div>
+            </div>
+        </div>
+        <div class="problem-item ripple-host reveal">
+            <div class="problem-item__badge">🗺️</div>
+            <div>
+                <div class="problem-item__title">空間結構資訊的喪失</div>
+                <div class="problem-item__desc">將圖片拉平成一維序列後，像素之間的相鄰關係（如「眼睛在鼻子上方」）就會丟失。CNN 在整個處理過程中保持二維的矩陣結構，能夠有效捕捉局部特徵（如邊緣、輪廓、形狀）及其相對位置。</div>
+            </div>
+        </div>
+        <div class="problem-item ripple-host reveal">
+            <div class="problem-item__badge">📍</div>
+            <div>
+                <div class="problem-item__title">位置不變性（Position Invariance）</div>
+                <div class="problem-item__desc">傳統方法的致命弱點是：同一隻貓出現在圖片左上角或右下角，模型可能無法辨識為同一事物。CNN 的卷積核以<strong>滑動掃描</strong>的方式遍歷整張影像，確保無論特徵出現在哪個位置，都能被準確捕捉。</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 1.3 Flow Steps -->
+    <h3 class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:18px;display:flex;align-items:center;gap:8px;">
+        <span style="opacity:.5;">1.3</span> 基本運作流程
+    </h3>
+    <div class="card reveal">
+        <div class="flow-steps">
+            <div class="flow-step ripple-host">
+                <div class="flow-step__num" data-tip="原始影像輸入">1</div>
+                <div class="flow-step__content">
+                    <div class="flow-step__title">輸入層（Input Layer）</div>
+                    <div class="flow-step__desc">接收原始影像資料。彩色圖片以三個通道（RGB）的二維矩陣形式輸入，例如一張 224×224 的彩色圖片，其輸入張量維度為 224 × 224 × 3。</div>
+                </div>
+            </div>
+            <div class="flow-step ripple-host">
+                <div class="flow-step__num" data-tip="特徵提取核心">2</div>
+                <div class="flow-step__content">
+                    <div class="flow-step__title">卷積層（Convolutional Layer）</div>
+                    <div class="flow-step__desc">這是 CNN 最核心的層。一個小型矩陣（稱為「濾鏡」或「卷積核，Kernel」）從圖片左上角開始，逐步向右、向下滑動，每次與覆蓋到的像素區域做「點積運算」，生成一張新的特徵圖（Feature Map）。每個卷積核專門負責捕捉某一種視覺特徵，例如橫向邊緣、垂直邊緣或特定紋理。</div>
+                </div>
+            </div>
+            <div class="flow-step ripple-host">
+                <div class="flow-step__num" data-tip="引入非線性">3</div>
+                <div class="flow-step__content">
+                    <div class="flow-step__title">激活函數（ReLU）</div>
+                    <div class="flow-step__desc">卷積運算後，每個特徵圖都會通過一個激活函數。最常用的是 ReLU（Rectified Linear Unit），其規則極為簡單：負數一律歸零，正數保持不變。這個步驟的目的是為網路引入非線性能力，使其能夠學習更複雜的規律。</div>
+                </div>
+            </div>
+            <div class="flow-step ripple-host">
+                <div class="flow-step__num" data-tip="降維保特徵">4</div>
+                <div class="flow-step__content">
+                    <div class="flow-step__title">池化層（Pooling Layer）</div>
+                    <div class="flow-step__desc">池化層的作用是對特徵圖進行「縮小」，減少資料的空間維度，同時保留最重要的特徵資訊。最常見的是「最大池化（Max Pooling）」，即從每個小區域中取出最大值。這個步驟不僅降低了計算量，也使特徵對細微的位移、旋轉更具有穩健性。</div>
+                </div>
+            </div>
+            <div class="flow-step ripple-host">
+                <div class="flow-step__num" data-tip="整合高階特徵">5</div>
+                <div class="flow-step__content">
+                    <div class="flow-step__title">全連接層（Fully Connected Layer）</div>
+                    <div class="flow-step__desc">經過多個卷積與池化層後，特徵圖會被「展平」成一維向量，送入一個或多個全連接層。此時網路已將影像中的視覺特徵轉化為高階語義資訊，全連接層負責整合這些資訊，輸出最終的分類結果。</div>
+                </div>
+            </div>
+            <div class="flow-step ripple-host">
+                <div class="flow-step__num" data-tip="輸出類別概率">6</div>
+                <div class="flow-step__content">
+                    <div class="flow-step__title">輸出層（Output Layer）</div>
+                    <div class="flow-step__desc">最後一層通常使用 Softmax 函數，將各類別的原始分數轉換成概率分佈（總和為 1），例如「貓：82%、狗：15%、鳥：3%」，取概率最高的類別作為辨識結果。</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 1.4 Applications -->
+    <h3 class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+        <span style="opacity:.5;">1.4</span> 常見應用領域
+    </h3>
+    <div class="intro-grid">
+        <div class="intro-card ripple-host reveal-left">
+            <div class="intro-card__icon">🩺</div>
+            <div class="intro-card__title">醫療影像分析</div>
+            <div class="intro-card__text">輔助醫師分析 X 光片、CT 掃描，偵測腫瘤、肺炎等病灶，提升診斷效率與準確率。</div>
+        </div>
+        <div class="intro-card ripple-host reveal-right">
+            <div class="intro-card__icon">🚗</div>
+            <div class="intro-card__title">自動駕駛</div>
+            <div class="intro-card__text">即時辨識道路上的行人、車輛、交通標誌，是自動駕駛視覺感知系統的核心技術。</div>
+        </div>
+        <div class="intro-card ripple-host reveal-left">
+            <div class="intro-card__icon">🔒</div>
+            <div class="intro-card__title">人臉辨識</div>
+            <div class="intro-card__text">應用於手機解鎖、門禁安全、支付驗證等場景，辨識精度已超越人類平均水準。</div>
+        </div>
+        <div class="intro-card ripple-host reveal-right">
+            <div class="intro-card__icon">🎨</div>
+            <div class="intro-card__title">影像生成與風格遷移</div>
+            <div class="intro-card__text">將一張照片的藝術風格套用到另一張圖片，或生成真實感極高的虛假影像（GAN）。</div>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- ======================================
+     SECTION 2 — AI 學習紀錄
+======================================= -->
+<section class="section" id="ai-record">
+<div class="container">
+    <div class="section__header reveal">
+        <div class="section__label">
+            <span class="task-num">2</span>
+            <span class="task-name">Task 02 · AI 輔助學習紀錄（佔 20%）</span>
+        </div>
+        <h2 class="section__title">AI 輔助學習紀錄</h2>
+        <p class="section__desc">記錄與 AI 的問答過程，以及這些回答如何幫助我建立對 CNN 的完整認識。</p>
+    </div>
+
+    <h3 class="reveal" style="font-size:.97rem;font-weight:700;color:var(--clr-text);margin-bottom:14px;">問答摘要整理</h3>
+    <div class="ai-table-wrapper reveal" style="margin-bottom:32px;">
+        <table class="ai-table">
+            <thead>
+                <tr>
+                    <th style="width:5%">#</th>
+                    <th style="width:28%">我提出的問題</th>
+                    <th style="width:37%">AI 回答重點</th>
+                    <th style="width:30%">對我的幫助</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Q1</td>
+                    <td>CNN 和一般的神經網路差在哪裡？</td>
+                    <td>一般全連接神經網路將圖片展平後處理，會破壞空間結構；CNN 透過<strong>卷積核滑動掃描</strong>保留影像的二維空間資訊，且參數量更少。</td>
+                    <td>讓我理解了 CNN 存在的必要性，而不只是「另一種網路」。</td>
+                </tr>
+                <tr>
+                    <td>Q2</td>
+                    <td>卷積層的「卷積」是什麼意思？數學上怎麼算的？</td>
+                    <td>卷積是將卷積核（小矩陣）與圖片對應區域的像素做<strong>逐元素相乘後加總</strong>，得到一個數值，代表「這個區域有多像卷積核所代表的特徵」。</td>
+                    <td>具體的數字計算讓我理解了特徵圖的生成原理。</td>
+                </tr>
+                <tr>
+                    <td>Q3</td>
+                    <td>ReLU 為什麼不用更複雜的激活函數？</td>
+                    <td>ReLU 計算量極低，且相比 Sigmoid 函數不容易出現「梯度消失」問題，讓深層網路也能有效訓練；在多數視覺任務中表現穩定。</td>
+                    <td>理解了激活函數選擇背後的工程考量，而非只是「規定這樣用」。</td>
+                </tr>
+                <tr>
+                    <td>Q4</td>
+                    <td>池化層是必要的嗎？能不能不用？</td>
+                    <td>池化層可降低特徵圖的空間尺寸、減少計算量，並提供一定的位置不變性。近年也有研究（如 All-CNN）完全不使用池化層，改用步長較大的卷積達到類似效果。</td>
+                    <td>讓我了解 CNN 並非固定的規則，而是有設計彈性的。</td>
+                </tr>
+                <tr>
+                    <td>Q5</td>
+                    <td>CNN 怎麼「學習」到正確的卷積核參數？</td>
+                    <td>透過<strong>反向傳播（Backpropagation）</strong>與梯度下降。訓練時，網路計算與正確答案的誤差，再反向計算每個參數應如何調整，反覆迭代後卷積核自動學到有意義的特徵。</td>
+                    <td>讓我明白 CNN 不是人工設計特徵，而是讓模型自己從數據中歸納。</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3 class="reveal" style="font-size:.97rem;font-weight:700;color:var(--clr-text);margin-bottom:14px;">對話示例（Q2 詳細過程）</h3>
+    <div class="card card--accent reveal">
+        <div class="dialogue">
+            <div class="dialogue__msg">
+                <div class="dialogue__avatar avatar--user">我</div>
+                <div class="dialogue__bubble bubble--user">
+                    我對「卷積」這個詞不太理解，可以用一個具體的數字例子說明卷積是怎麼計算的嗎？
+                </div>
+            </div>
+            <div class="dialogue__msg dialogue__msg--ai">
+                <div class="dialogue__avatar avatar--ai">AI</div>
+                <div class="dialogue__bubble bubble--ai">
+                    當然！假設有一個 3×3 的影像區域，像素值為：<br><br>
+                    <strong>影像區域：</strong>[ 1, 0, 1 ] / [ 0, 1, 0 ] / [ 1, 0, 1 ]<br>
+                    <strong>卷積核：</strong>[ 1, 0, -1 ] / [ 1, 0, -1 ] / [ 1, 0, -1 ]<br><br>
+                    計算方式：對應位置相乘後全部加總：<br>
+                    (1×1)+(0×0)+(1×-1)+(0×1)+(1×0)+(0×-1)+(1×1)+(0×0)+(1×-1) = <strong>0</strong><br><br>
+                    這個「0」代表此區域對「垂直邊緣」的響應為零。若數值很大，代表該區域有強烈的對應特徵。
+                </div>
+            </div>
+            <div class="dialogue__msg">
+                <div class="dialogue__avatar avatar--user">我</div>
+                <div class="dialogue__bubble bubble--user">
+                    所以不同的卷積核可以偵測不同的特徵？那一個 CNN 通常會用幾個卷積核？
+                </div>
+            </div>
+            <div class="dialogue__msg dialogue__msg--ai">
+                <div class="dialogue__avatar avatar--ai">AI</div>
+                <div class="dialogue__bubble bubble--ai">
+                    正確！每個卷積核負責偵測一種特徵。在一個卷積層中，通常同時使用<strong>數十到數百個卷積核</strong>。例如第一個卷積層可能有 32 個核，各自偵測 32 種不同的低階特徵（邊緣、顏色梯度等）；越深的層，核的數量往往越多，偵測的特徵也越抽象（紋理、形狀、物體部件等）。
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="highlight-box reveal" style="margin-top:22px;">
+        <strong>AI 輔助學習的整體評估：</strong>AI 能夠根據我的問題給出即時、個人化的解釋，特別是在數學計算範例方面，大幅降低了學習門檻。然而，AI 的回答有時過於簡化，需要進一步追問細節，且部分內容仍需查閱原始文獻加以確認。
+    </div>
+</div>
+</section>
+
+<!-- ======================================
+     SECTION 3 — 查證與修正
+======================================= -->
+<section class="section" id="verify">
+<div class="container">
+    <div class="section__header reveal">
+        <div class="section__label">
+            <span class="task-num">3</span>
+            <span class="task-name">Task 03 · 查證與修正（佔 20%）</span>
+        </div>
+        <h2 class="section__title">查證與修正</h2>
+        <p class="section__desc">針對 AI 回答中的一個核心概念進行獨立查證，並記錄是否需要修正原本的理解。</p>
+    </div>
+
+    <div class="card card--purple reveal" style="margin-bottom:24px;">
+        <div style="margin-bottom:10px;"><span class="tag--purple">查證主題</span></div>
+        <h3 style="font-size:1rem;font-weight:700;color:var(--clr-text);margin-bottom:8px;">「ReLU 函數能有效解決梯度消失問題」</h3>
+        <p style="font-size:.87rem;color:var(--clr-text-muted);line-height:1.75;">AI 在回答 Q3 時提到，ReLU 相比 Sigmoid 函數「不容易出現梯度消失問題」。這是一個關鍵論點，但我認為有必要進一步查證，確認這項陳述的準確性與完整性。</p>
+    </div>
+
+    <h3 class="reveal" style="font-size:.97rem;font-weight:700;color:var(--clr-text);margin-bottom:14px;">查證過程</h3>
+    <div class="verify-flow reveal" style="margin-bottom:24px;">
+        <div class="verify-box">
+            <div class="verify-box__label" style="color:var(--clr-accent-2);">📝 AI 原始說法</div>
+            <div class="verify-box__content">ReLU 相比 Sigmoid 函數「不容易出現梯度消失問題」，因此在深層網路中訓練效果更好。</div>
+        </div>
+        <div class="verify-arrow">→</div>
+        <div class="verify-box">
+            <div class="verify-box__label" style="color:var(--clr-accent);">✅ 查證後的完整說法</div>
+            <div class="verify-box__content">AI 的說法<strong>大方向正確，但不夠完整</strong>。ReLU 在正數區間的梯度為常數 1，確實比 Sigmoid 的最大梯度 0.25 更有利於梯度傳遞。<br><br>然而，ReLU 存在「<strong>神經元死亡（Dying ReLU）</strong>」問題：當一個神經元持續輸入負值時，其梯度永遠為 0，導致參數無法更新。這個問題是 AI 未提及的重要限制。</div>
+        </div>
+    </div>
+
+    <h3 class="reveal" style="font-size:.97rem;font-weight:700;color:var(--clr-text);margin-bottom:12px;">查證資料來源</h3>
+    <div class="source-cite reveal">
+        <div class="source-cite__icon">📚</div>
+        <div class="source-cite__text">
+            <strong>來源 1：</strong>LeCun, Y., Bengio, Y., &amp; Hinton, G. (2015). <em>Deep learning</em>. Nature, 521(7553), 436–444.<br>
+            論文中詳細討論了激活函數的選擇對深層網路訓練的影響，確認 ReLU 的非飽和特性確實改善了梯度傳遞。<br><br>
+            <strong>來源 2：</strong>Nair, V., &amp; Hinton, G. E. (2010). <em>Rectified linear units improve restricted boltzmann machines</em>. ICML.<br>
+            該論文首次系統性地提出將 ReLU 用於深度模型，並指出其計算效率優勢。<br><br>
+            <strong>來源 3：</strong>He, K., et al. (2015). <em>Delving deep into rectifiers: Surpassing human-level performance on ImageNet classification</em>. ICCV.<br>
+            論文提出 PReLU 與 Leaky ReLU 以解決 Dying ReLU 問題，間接證實了此限制的存在。
+        </div>
+    </div>
+
+    <div class="highlight-box highlight-box--teal reveal" style="margin-top:22px;">
+        <strong>查證結論與修正：</strong>AI 的核心論點（ReLU 在梯度傳遞上優於 Sigmoid）是正確且有文獻支持的。但我的理解需要<strong>補充修正</strong>：ReLU 並非完全解決了梯度消失問題，它只是在正數範圍緩解了此問題，同時引入了「神經元死亡」的新風險。這也是後來出現 Leaky ReLU、ELU 等改進版本的原因。AI 的回答有簡化的成分，需要獨立查證才能得到完整、準確的認識。
+    </div>
+</div>
+</section>
+
+<!-- ======================================
+     SECTION 4 — 視覺化
+======================================= -->
+<section class="section" id="visualize">
+<div class="container">
+    <div class="section__header reveal">
+        <div class="section__label">
+            <span class="task-num">4</span>
+            <span class="task-name">Task 04 · 視覺化說明（佔 20%）</span>
+        </div>
+        <h2 class="section__title">CNN 架構視覺化</h2>
+        <p class="section__desc">透過圖表呈現 CNN 的整體架構，以及點擊各層查看詳細說明。</p>
+    </div>
+
+    <!-- Static Architecture Flow -->
+    <div class="viz-container reveal">
+        <div class="viz-header">
+            <div class="viz-dot" style="background:#f87171;"></div>
+            <div class="viz-dot" style="background:#fbbf24;"></div>
+            <div class="viz-dot" style="background:#34d399;"></div>
+            <span>CNN 標準架構資料流向圖</span>
+        </div>
+        <div class="cnn-arch-diagram">
+            <div class="cnn-layers">
+                <!-- Input -->
+                <div class="cnn-layer">
+                    <div class="layer-block">
+                        <div class="layer-slice" style="width:22px;height:88px;background:linear-gradient(to bottom,rgba(124,92,252,0.5),rgba(124,92,252,0.8));border:1.5px solid rgba(124,92,252,0.6);"></div>
+                        <div class="layer-slice" style="width:22px;height:88px;background:linear-gradient(to bottom,rgba(124,92,252,0.35),rgba(124,92,252,0.65));border:1.5px solid rgba(124,92,252,0.5);margin-left:-4px;"></div>
+                        <div class="layer-slice" style="width:22px;height:88px;background:linear-gradient(to bottom,rgba(124,92,252,0.2),rgba(124,92,252,0.5));border:1.5px solid rgba(124,92,252,0.4);margin-left:-4px;"></div>
+                    </div>
+                    <div class="layer-info">
+                        <div class="layer-info__name" style="color:#5634c0;">輸入層</div>
+                        <div class="layer-info__desc">224×224×3</div>
+                    </div>
+                </div>
+                <div class="layer-connector">›</div>
+                <!-- Conv1 -->
+                <div class="cnn-layer">
+                    <div class="layer-block">
+                        <div class="layer-slice" style="width:14px;height:78px;background:linear-gradient(to bottom,rgba(58,111,244,0.5),rgba(58,111,244,0.8));border:1.5px solid rgba(58,111,244,0.6);"></div>
+                        <div class="layer-slice" style="width:14px;height:78px;background:linear-gradient(to bottom,rgba(58,111,244,0.4),rgba(58,111,244,0.7));border:1.5px solid rgba(58,111,244,0.5);margin-left:-3px;"></div>
+                        <div class="layer-slice" style="width:14px;height:78px;background:linear-gradient(to bottom,rgba(58,111,244,0.3),rgba(58,111,244,0.6));border:1.5px solid rgba(58,111,244,0.4);margin-left:-3px;"></div>
+                        <div class="layer-slice" style="width:14px;height:78px;background:linear-gradient(to bottom,rgba(58,111,244,0.2),rgba(58,111,244,0.5));border:1.5px solid rgba(58,111,244,0.3);margin-left:-3px;"></div>
+                    </div>
+                    <div class="layer-info">
+                        <div class="layer-info__name" style="color:var(--clr-primary-d);">卷積層 1</div>
+                        <div class="layer-info__desc">32 Filters</div>
+                    </div>
+                </div>
+                <div class="layer-connector">›</div>
+                <!-- Pool1 -->
+                <div class="cnn-layer">
+                    <div class="layer-block">
+                        <div class="layer-slice" style="width:18px;height:55px;background:linear-gradient(to bottom,rgba(0,184,148,0.5),rgba(0,184,148,0.8));border:1.5px solid rgba(0,184,148,0.6);"></div>
+                        <div class="layer-slice" style="width:18px;height:55px;background:linear-gradient(to bottom,rgba(0,184,148,0.3),rgba(0,184,148,0.6));border:1.5px solid rgba(0,184,148,0.4);margin-left:-4px;"></div>
+                    </div>
+                    <div class="layer-info">
+                        <div class="layer-info__name" style="color:#007a62;">池化層 1</div>
+                        <div class="layer-info__desc">Max Pool 2×2</div>
+                    </div>
+                </div>
+                <div class="layer-connector">›</div>
+                <!-- Conv2 -->
+                <div class="cnn-layer">
+                    <div class="layer-block">
+                        <div class="layer-slice" style="width:12px;height:68px;background:linear-gradient(to bottom,rgba(58,111,244,0.6),rgba(58,111,244,0.9));border:1.5px solid rgba(58,111,244,0.7);"></div>
+                        <div class="layer-slice" style="width:12px;height:68px;background:linear-gradient(to bottom,rgba(58,111,244,0.5),rgba(58,111,244,0.8));border:1.5px solid rgba(58,111,244,0.6);margin-left:-3px;"></div>
+                        <div class="layer-slice" style="width:12px;height:68px;background:linear-gradient(to bottom,rgba(58,111,244,0.4),rgba(58,111,244,0.7));border:1.5px solid rgba(58,111,244,0.5);margin-left:-3px;"></div>
+                        <div class="layer-slice" style="width:12px;height:68px;background:linear-gradient(to bottom,rgba(58,111,244,0.3),rgba(58,111,244,0.6));border:1.5px solid rgba(58,111,244,0.4);margin-left:-3px;"></div>
+                        <div class="layer-slice" style="width:12px;height:68px;background:linear-gradient(to bottom,rgba(58,111,244,0.2),rgba(58,111,244,0.5));border:1.5px solid rgba(58,111,244,0.3);margin-left:-3px;"></div>
+                    </div>
+                    <div class="layer-info">
+                        <div class="layer-info__name" style="color:var(--clr-primary-d);">卷積層 2</div>
+                        <div class="layer-info__desc">64 Filters</div>
+                    </div>
+                </div>
+                <div class="layer-connector">›</div>
+                <!-- Pool2 -->
+                <div class="cnn-layer">
+                    <div class="layer-block">
+                        <div class="layer-slice" style="width:16px;height:38px;background:linear-gradient(to bottom,rgba(0,184,148,0.6),rgba(0,184,148,0.9));border:1.5px solid rgba(0,184,148,0.7);"></div>
+                        <div class="layer-slice" style="width:16px;height:38px;background:linear-gradient(to bottom,rgba(0,184,148,0.4),rgba(0,184,148,0.7));border:1.5px solid rgba(0,184,148,0.5);margin-left:-4px;"></div>
+                    </div>
+                    <div class="layer-info">
+                        <div class="layer-info__name" style="color:#007a62;">池化層 2</div>
+                        <div class="layer-info__desc">Max Pool 2×2</div>
+                    </div>
+                </div>
+                <div class="layer-connector">›</div>
+                <!-- Flatten -->
+                <div class="cnn-layer">
+                    <div class="layer-block" style="align-items:center;">
+                        <div class="layer-slice" style="width:10px;height:88px;background:linear-gradient(to bottom,rgba(245,158,11,0.5),rgba(245,158,11,0.85));border:1.5px solid rgba(245,158,11,0.6);border-radius:2px;"></div>
+                    </div>
+                    <div class="layer-info">
+                        <div class="layer-info__name" style="color:#b45309;">展平</div>
+                        <div class="layer-info__desc">Flatten</div>
+                    </div>
+                </div>
+                <div class="layer-connector">›</div>
+                <!-- FC -->
+                <div class="cnn-layer">
+                    <div class="layer-block" style="align-items:center;">
+                        <div style="display:flex;flex-direction:column;gap:3px;align-items:center;">
+                            <div style="width:13px;height:13px;border-radius:50%;background:rgba(245,158,11,0.7);border:1.5px solid rgba(245,158,11,0.9);transition:.25s;"></div>
+                            <div style="width:13px;height:13px;border-radius:50%;background:rgba(245,158,11,0.7);border:1.5px solid rgba(245,158,11,0.9);transition:.25s;"></div>
+                            <div style="width:13px;height:13px;border-radius:50%;background:rgba(245,158,11,0.7);border:1.5px solid rgba(245,158,11,0.9);transition:.25s;"></div>
+                            <div style="width:13px;height:13px;border-radius:50%;background:rgba(245,158,11,0.7);border:1.5px solid rgba(245,158,11,0.9);transition:.25s;"></div>
+                            <div style="width:13px;height:13px;border-radius:50%;background:rgba(245,158,11,0.7);border:1.5px solid rgba(245,158,11,0.9);transition:.25s;"></div>
+                            <div style="width:13px;height:13px;border-radius:50%;background:rgba(245,158,11,0.7);border:1.5px solid rgba(245,158,11,0.9);transition:.25s;"></div>
+                        </div>
+                    </div>
+                    <div class="layer-info">
+                        <div class="layer-info__name" style="color:#b45309;">全連接層</div>
+                        <div class="layer-info__desc">128 neurons</div>
+                    </div>
+                </div>
+                <div class="layer-connector">›</div>
+                <!-- Output -->
+                <div class="cnn-layer">
+                    <div class="layer-block" style="align-items:center;">
+                        <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
+                            <div style="width:15px;height:15px;border-radius:50%;background:rgba(239,68,68,0.7);border:1.5px solid rgba(239,68,68,0.9);"></div>
+                            <div style="width:15px;height:15px;border-radius:50%;background:rgba(239,68,68,0.7);border:1.5px solid rgba(239,68,68,0.9);"></div>
+                            <div style="width:15px;height:15px;border-radius:50%;background:rgba(239,68,68,0.7);border:1.5px solid rgba(239,68,68,0.9);"></div>
+                        </div>
+                    </div>
+                    <div class="layer-info">
+                        <div class="layer-info__name" style="color:#b91c1c;">輸出層</div>
+                        <div class="layer-info__desc">Softmax</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interactive step-by-step panel -->
+    <div class="cnn-interactive reveal">
+        <div class="cnn-interactive__title">🔍 點擊各層深入了解</div>
+        <div class="cnn-step-tabs">
+            <button class="cnn-step-tab active" data-panel="p-input">輸入層</button>
+            <button class="cnn-step-tab" data-panel="p-conv">卷積層</button>
+            <button class="cnn-step-tab" data-panel="p-relu">ReLU</button>
+            <button class="cnn-step-tab" data-panel="p-pool">池化層</button>
+            <button class="cnn-step-tab" data-panel="p-fc">全連接層</button>
+            <button class="cnn-step-tab" data-panel="p-out">輸出層</button>
+        </div>
+
+        <!-- Input -->
+        <div class="cnn-step-panel active" id="p-input">
+            <div class="cnn-step-panel__inner">
+                <div class="cnn-step-visual">
+                    <div>
+                        <div style="font-size:11px;color:var(--clr-text-subtle);text-align:center;margin-bottom:10px;">5×5 影像（灰階像素值）</div>
+                        <div class="pixel-grid" id="input-grid" style="grid-template-columns:repeat(5,28px);"></div>
+                    </div>
+                </div>
+                <div class="cnn-step-text">
+                    <h4>輸入層（Input Layer）</h4>
+                    <p>接收原始影像資料。每個格子代表一個像素，數值 0–255 代表亮度。彩色圖片有 RGB 三個這樣的矩陣（通道），疊加在一起。<br><br>
+                    <strong>範例：</strong>224×224 的彩色圖片 → 輸入張量大小為 224 × 224 × 3。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conv -->
+        <div class="cnn-step-panel" id="p-conv">
+            <div class="cnn-step-panel__inner">
+                <div class="cnn-step-visual">
+                    <div class="conv-demo" style="width:100%;">
+                        <div class="conv-row">
+                            <div style="text-align:center;">
+                                <div class="matrix-label">影像片段</div>
+                                <div class="matrix-grid" style="grid-template-columns:repeat(3,34px);" id="conv-input"></div>
+                            </div>
+                            <div class="conv-op">⊛</div>
+                            <div style="text-align:center;">
+                                <div class="matrix-label">卷積核</div>
+                                <div class="matrix-grid" style="grid-template-columns:repeat(3,34px);" id="conv-kernel"></div>
+                            </div>
+                            <div class="conv-op">=</div>
+                            <div style="text-align:center;">
+                                <div class="matrix-label">輸出值</div>
+                                <div style="width:50px;height:50px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;background:rgba(0,184,148,0.12);border:2px solid rgba(0,184,148,0.35);color:#007a62;" id="conv-output">2</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cnn-step-text">
+                    <h4>卷積層（Convolutional Layer）</h4>
+                    <p>卷積核在影像上滑動，每次與對應的 3×3 區域做<strong>逐元素相乘後加總</strong>。<br><br>
+                    不同的卷積核學習不同特徵，例如橫向邊緣、垂直邊緣、45° 斜線等。一個卷積層通常有 32～512 個不同的卷積核同時工作。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ReLU -->
+        <div class="cnn-step-panel" id="p-relu">
+            <div class="cnn-step-panel__inner">
+                <div class="cnn-step-visual">
+                    <div style="width:100%;">
+                        <div style="font-size:11px;color:var(--clr-text-subtle);text-align:center;margin-bottom:10px;">ReLU 函數（hover 查看轉換）</div>
+                        <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap;" id="relu-demo"></div>
+                    </div>
+                </div>
+                <div class="cnn-step-text">
+                    <h4>激活函數 ReLU</h4>
+                    <p>規則：<strong>f(x) = max(0, x)</strong><br><br>
+                    負數 → 歸零，正數 → 不變。這樣的設計為網路引入了非線性，使 CNN 能夠學習更複雜的映射關係。若沒有激活函數，多層堆疊的卷積層本質上只是一個線性變換。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pool -->
+        <div class="cnn-step-panel" id="p-pool">
+            <div class="cnn-step-panel__inner">
+                <div class="cnn-step-visual">
+                    <div>
+                        <div style="font-size:11px;color:var(--clr-text-subtle);text-align:center;margin-bottom:10px;">Max Pooling 2×2（hover 查看選取最大值）</div>
+                        <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;">
+                            <div>
+                                <div class="matrix-grid" style="grid-template-columns:repeat(4,32px);" id="pool-input"></div>
+                            </div>
+                            <div style="font-size:20px;color:var(--clr-text-subtle);">→</div>
+                            <div>
+                                <div class="matrix-grid" style="grid-template-columns:repeat(2,32px);" id="pool-output"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cnn-step-text">
+                    <h4>池化層（Pooling Layer）</h4>
+                    <p>Max Pooling 在每個 2×2 區域中只保留<strong>最大值</strong>，特徵圖面積縮小為原來的 1/4。<br><br>
+                    這不僅減少了計算量，還讓特徵對細微位移、輕微旋轉更具穩健性——即使特徵稍微移動了幾個像素，最大值通常仍能保留。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- FC -->
+        <div class="cnn-step-panel" id="p-fc">
+            <div class="cnn-step-panel__inner">
+                <div class="cnn-step-visual">
+                    <div style="display:flex;align-items:center;gap:16px;justify-content:center;flex-wrap:wrap;">
+                        <div style="display:flex;flex-direction:column;gap:5px;" id="fc-input-nodes"></div>
+                        <div style="position:relative;width:40px;height:100px;">
+                            <svg width="40" height="100" id="fc-lines"></svg>
+                        </div>
+                        <div style="display:flex;flex-direction:column;gap:10px;" id="fc-output-nodes"></div>
+                    </div>
+                </div>
+                <div class="cnn-step-text">
+                    <h4>全連接層（Fully Connected Layer）</h4>
+                    <p>特徵圖被「展平」成一維向量後，每個神經元都與下一層所有神經元相連。<br><br>
+                    此時網路已完成特徵提取，全連接層負責將這些<strong>空間特徵轉化為類別判斷</strong>，輸出每個類別的分數（logit）。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Output -->
+        <div class="cnn-step-panel" id="p-out">
+            <div class="cnn-step-panel__inner">
+                <div class="cnn-step-visual">
+                    <div style="width:100%;" id="softmax-bars"></div>
+                </div>
+                <div class="cnn-step-text">
+                    <h4>輸出層 — Softmax</h4>
+                    <p>Softmax 函數將各類別的原始分數轉換成<strong>概率分佈（總和為 1）</strong>。<br><br>
+                    例如：貓 82%、狗 15%、鳥 3%。模型取概率最高的類別作為最終預測結果。概率越接近 1，代表模型越有把握。</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Layer info cards -->
+    <div style="margin-top:24px;display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px;" class="reveal">
+        <div class="card" style="padding:18px;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                <div style="width:11px;height:11px;border-radius:2px;background:#7c5cfc;"></div>
+                <span style="font-size:.84rem;font-weight:700;color:#5634c0;">輸入層</span>
+            </div>
+            <p style="font-size:.8rem;color:var(--clr-text-muted);line-height:1.7;">接收原始像素值，彩色圖片有 RGB 三個通道，維度為 H×W×3。</p>
+        </div>
+        <div class="card" style="padding:18px;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                <div style="width:11px;height:11px;border-radius:2px;background:var(--clr-primary);"></div>
+                <span style="font-size:.84rem;font-weight:700;color:var(--clr-primary-d);">卷積層</span>
+            </div>
+            <p style="font-size:.8rem;color:var(--clr-text-muted);line-height:1.7;">多個卷積核滑動掃描影像，生成多張特徵圖，每張對應一種視覺特徵的響應。</p>
+        </div>
+        <div class="card" style="padding:18px;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                <div style="width:11px;height:11px;border-radius:2px;background:var(--clr-accent);"></div>
+                <span style="font-size:.84rem;font-weight:700;color:#007a62;">池化層</span>
+            </div>
+            <p style="font-size:.8rem;color:var(--clr-text-muted);line-height:1.7;">對特徵圖進行降維，保留最顯著的特徵，降低計算量並提升位移穩健性。</p>
+        </div>
+        <div class="card" style="padding:18px;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                <div style="width:11px;height:11px;border-radius:2px;background:var(--clr-warning);"></div>
+                <span style="font-size:.84rem;font-weight:700;color:#b45309;">全連接層</span>
+            </div>
+            <p style="font-size:.8rem;color:var(--clr-text-muted);line-height:1.7;">整合所有特徵資訊，進行高層次的語義分析，輸出各類別的預測分數。</p>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- ======================================
+     SECTION 5 — 應用案例
+======================================= -->
+<section class="section" id="cases">
+<div class="container">
+    <div class="section__header reveal">
+        <div class="section__label">
+            <span class="task-num">5</span>
+            <span class="task-name">Task 05 · 應用案例（佔 20%）</span>
+        </div>
+        <h2 class="section__title">CNN 的實際應用案例</h2>
+        <p class="section__desc">CNN 的影響力已遍及眾多行業，以下是幾個具代表性的應用場景。</p>
+    </div>
+
+    <div class="cases-grid">
+        <div class="case-card case-card--blue ripple-host reveal">
+            <span class="case-card__emoji">🩺</span>
+            <div class="case-card__title">醫療影像診斷</div>
+            <div class="case-card__desc">CNN 可分析 X 光片、MRI 與 CT 掃描影像，協助醫師偵測早期腫瘤、視網膜病變、肺炎等疾病。Google DeepMind 的 AI 系統在黃斑部病變偵測上已達到眼科醫師的準確率水準。</div>
+            <div class="case-card__examples">
+                <span class="example-chip">乳癌篩檢</span>
+                <span class="example-chip">肺結節偵測</span>
+                <span class="example-chip">視網膜病變</span>
+            </div>
+        </div>
+        <div class="case-card case-card--teal ripple-host reveal">
+            <span class="case-card__emoji">🚗</span>
+            <div class="case-card__title">自動駕駛視覺感知</div>
+            <div class="case-card__desc">自動駕駛車輛搭載多個攝影機，利用 CNN 即時辨識路上的行人、車輛、交通號誌、車道線等，是安全行駛的視覺基礎。Tesla 的 Autopilot 系統正是以 CNN 為核心的視覺處理架構。</div>
+            <div class="case-card__examples">
+                <span class="example-chip">行人偵測</span>
+                <span class="example-chip">號誌辨識</span>
+                <span class="example-chip">障礙物偵測</span>
+            </div>
+        </div>
+        <div class="case-card case-card--purple ripple-host reveal">
+            <span class="case-card__emoji">🔒</span>
+            <div class="case-card__title">人臉辨識與生物識別</div>
+            <div class="case-card__desc">CNN 能從人臉影像中提取數百個微小特徵點，即使在不同角度、光線或部分遮擋的條件下也能準確辨識，應用於手機解鎖、機場安檢、金融支付驗證等高安全性場景。</div>
+            <div class="case-card__examples">
+                <span class="example-chip">Face ID</span>
+                <span class="example-chip">邊境安檢</span>
+                <span class="example-chip">刷臉支付</span>
+            </div>
+        </div>
+        <div class="case-card case-card--yellow ripple-host reveal">
+            <span class="case-card__emoji">🏭</span>
+            <div class="case-card__title">工業品質檢測</div>
+            <div class="case-card__desc">在製造業中，CNN 被用來自動檢查產品表面是否存在瑕疵，例如晶片電路的缺陷、布料的織紋不均勻等。相比人工目視，速度更快且不會因疲勞而降低準確率。</div>
+            <div class="case-card__examples">
+                <span class="example-chip">PCB 缺陷</span>
+                <span class="example-chip">食品外觀</span>
+                <span class="example-chip">鋼材裂縫</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+    <h3 class="reveal" style="font-size:.97rem;font-weight:700;color:var(--clr-text);margin-bottom:14px;">深入案例：CNN 在醫療影像診斷中的應用</h3>
+    <div class="card card--teal reveal">
+        <p style="font-size:.9rem;color:var(--clr-text-muted);line-height:1.85;margin-bottom:14px;">
+            2017 年，史丹佛大學的研究團隊在《Nature》期刊上發表了一篇重要論文，展示了一個基於 CNN 的皮膚癌診斷系統。該系統在 129,450 張皮膚病灶圖片上訓練後，接受與 21 位皮膚科醫師相同的測試，結果顯示 AI 的診斷準確率<strong style="color:#007a62;">與皮膚科醫師相當，甚至在某些分類上略勝一籌</strong>。
+        </p>
+        <p style="font-size:.9rem;color:var(--clr-text-muted);line-height:1.85;margin-bottom:14px;">
+            這個案例的意義在於：CNN 無需人工設計「什麼是惡性腫瘤的特徵」，而是從數十萬張圖片中<strong style="color:#007a62;">自動學習</strong>到醫師花數年才能習得的視覺診斷模式。這正體現了深度學習最根本的革命性——讓機器從數據中自主歸納規律。
+        </p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <span class="tag--teal">Nature 2017</span>
+            <span class="tag">Stanford University</span>
+            <span class="tag--purple">皮膚癌偵測</span>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- ======================================
+     SECTION 6 — 學習反思
+======================================= -->
+<section class="section" id="reflection">
+<div class="container">
+    <div class="section__header reveal">
+        <div class="section__label">
+            <span class="task-num">6</span>
+            <span class="task-name">Task 06 · 學習反思（佔 10%）</span>
+        </div>
+        <h2 class="section__title">學習反思</h2>
+        <p class="section__desc">記錄這次以 AI 輔助學習 CNN 的完整心得，包含 AI 的幫助、限制，以及自己真正學到了什麼。</p>
+    </div>
+
+    <div class="reflection-grid">
+        <div class="reflection-item reveal-left">
+            <div class="reflection-item__icon">✅</div>
+            <div class="reflection-item__title">AI 在學習上的幫助</div>
+            <div class="reflection-item__text">AI 最大的優勢在於能夠提供<strong>即時、個人化的解釋</strong>。當我不理解「卷積」是什麼時，AI 馬上給出具體的數字範例；當我想了解某個概念的更深一層時，只需追問即可，不需要在大量文獻中自行搜尋。整個學習過程效率明顯提升，也讓我更有勇氣去提問「聽起來很蠢」的問題。</div>
+        </div>
+        <div class="reflection-item reveal-right">
+            <div class="reflection-item__icon">⚠️</div>
+            <div class="reflection-item__title">AI 回答的限制</div>
+            <div class="reflection-item__text">AI 有時會<strong>過度簡化</strong>複雜的概念，或者給出「大方向正確但不完整」的答案。例如關於 ReLU 的說明，AI 未提及「神經元死亡」問題。此外，AI 的回答難以直接附上可信的學術文獻，需要自行查證——這次作業讓我深刻體會到，<strong>AI 是輔助，不是權威</strong>。</div>
+        </div>
+        <div class="reflection-item reveal-left">
+            <div class="reflection-item__icon">💡</div>
+            <div class="reflection-item__title">我真正學會了什麼</div>
+            <div class="reflection-item__text">在這次學習前，我對 CNN 的認識只停留在「一種影像辨識 AI」。現在我能夠說明卷積層、池化層的具體作用，理解參數共享的意義，以及為什麼 ReLU 比 Sigmoid 更常用——但同時知道 ReLU 也有其限制。最重要的是，我學會了<strong>「帶著批判眼光去使用 AI」</strong>。</div>
+        </div>
+        <div class="reflection-item reveal-right">
+            <div class="reflection-item__icon">🔄</div>
+            <div class="reflection-item__title">未來的學習方向</div>
+            <div class="reflection-item__text">這次學習讓我對深度學習產生了更濃厚的興趣。接下來，我想進一步探索 ResNet、VGG 等更先進的 CNN 架構，理解為什麼更深的網路反而有時訓練效果更差（梯度消失問題），以及殘差連接（Residual Connection）如何解決這個問題。</div>
+        </div>
+    </div>
+
+    <div class="reflection-summary reveal">
+        <p class="reflection-summary__text">
+            總結而言，這次以「AI 輔助 + 自主查證」的學習模式，讓我對 CNN 有了從淺到深的系統性理解。<strong>AI 大幅降低了入門門檻</strong>，讓我能夠在短時間內建立起整體的概念框架；而<strong>獨立查證的過程</strong>，則讓我真正掌握了細節，並發展出對資訊的批判思維。這種學習方式值得在未來持續採用，但必須始終記得：AI 是一把強大的工具，而不是不容置疑的答案。
+        </p>
+    </div>
+</div>
+</section>
+
+</main>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer__text">
+            <strong>CNN 演算法介紹 — 期末評量成果</strong><br>
+            學號：111316016 ｜ 主題：卷積神經網路（CNN）<br>
+            <span style="font-size:.75rem;margin-top:6px;display:block;">本頁面內容為個人學習成果，部分概念參考學術論文及課程資料，並輔以 AI 工具協助理解。</span>
+        </div>
+    </div>
+</footer>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script>
+/* ---- 1. Nav scroll shadow ---- */
+const nav = document.getElementById('main-nav');
+window.addEventListener('scroll', () => {
+    nav.classList.toggle('nav--scrolled', window.scrollY > 20);
+});
+
+/* ---- 2. Section progress dots + nav highlight ---- */
+const sections = document.querySelectorAll('section[id]');
+const dots = document.querySelectorAll('.progress-dot');
+const navLinks = document.querySelectorAll('.nav__links a');
+
+const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const id = entry.target.id;
+            dots.forEach(d => d.classList.toggle('active', d.dataset.target === id));
+            navLinks.forEach(a => {
+                const match = a.getAttribute('href') === '#' + id;
+                a.classList.toggle('active', match);
+            });
+        }
+    });
+}, { rootMargin: '-40% 0px -40% 0px', threshold: 0 });
+
+sections.forEach(s => sectionObserver.observe(s));
+
+dots.forEach(dot => {
+    dot.addEventListener('click', () => {
+        document.getElementById(dot.dataset.target)?.scrollIntoView({ behavior: 'smooth' });
+    });
+});
+
+/* ---- 3. Scroll reveal ---- */
+const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+            setTimeout(() => entry.target.classList.add('revealed'), i * 60);
+            revealObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+revealEls.forEach(el => revealObserver.observe(el));
+
+/* ---- 4. Ripple effect ---- */
+document.querySelectorAll('.ripple-host').forEach(el => {
+    el.addEventListener('click', function(e) {
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top  - size / 2;
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        ripple.style.cssText = `width:${size}px;height:${size}px;left:${x}px;top:${y}px;`;
+        this.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+    });
+});
+
+/* ---- 5. Interactive CNN tabs ---- */
+document.querySelectorAll('.cnn-step-tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+        document.querySelectorAll('.cnn-step-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.cnn-step-panel').forEach(p => p.classList.remove('active'));
+        this.classList.add('active');
+        document.getElementById(this.dataset.panel).classList.add('active');
+    });
+});
+
+/* ---- 6. Build interactive visuals ---- */
+// Input grid
+(function() {
+    const vals = [20,80,30,60,10, 70,200,150,90,40, 40,120,255,180,60, 10,60,130,200,100, 5,20,50,80,30];
+    const grid = document.getElementById('input-grid');
+    if (!grid) return;
+    vals.forEach(v => {
+        const p = document.createElement('div');
+        const alpha = v / 255;
+        p.className = 'pixel';
+        p.style.cssText = `background:rgba(58,111,244,${alpha.toFixed(2)});border:1px solid rgba(58,111,244,${(alpha*0.6+0.1).toFixed(2)});color:${v > 150 ? '#fff' : '#1a2340'};`;
+        p.textContent = v;
+        p.title = `像素值：${v}`;
+        grid.appendChild(p);
+    });
+})();
+
+// Conv kernel & input
+(function() {
+    const inputVals  = [[1,0,1],[0,1,0],[1,0,1]];
+    const kernelVals = [[1,0,-1],[1,0,-1],[1,0,-1]];
+    const cIn  = document.getElementById('conv-input');
+    const cKer = document.getElementById('conv-kernel');
+    const cOut = document.getElementById('conv-output');
+    if (!cIn) return;
+
+    let result = 0;
+    inputVals.flat().forEach((v, i) => {
+        const c = document.createElement('div');
+        c.className = 'matrix-cell';
+        c.style.cssText = `background:rgba(124,92,252,${v ? 0.15 : 0.04});border:1.5px solid rgba(124,92,252,${v ? 0.35 : 0.15});color:${v ? '#5634c0' : 'var(--clr-text-subtle)'};`;
+        c.textContent = v;
+        cIn.appendChild(c);
+        result += v * kernelVals.flat()[i];
+    });
+    kernelVals.flat().forEach(v => {
+        const c = document.createElement('div');
+        c.className = 'matrix-cell';
+        const pos = v > 0;
+        const neg = v < 0;
+        c.style.cssText = `background:${pos?'rgba(58,111,244,0.12)':neg?'rgba(239,68,68,0.1)':'rgba(180,180,180,0.08)'};border:1.5px solid ${pos?'rgba(58,111,244,0.3)':neg?'rgba(239,68,68,0.25)':'rgba(180,180,180,0.2)'};color:${pos?'var(--clr-primary-d)':neg?'#b91c1c':'var(--clr-text-subtle)'};`;
+        c.textContent = v;
+        cKer.appendChild(c);
+    });
+    cOut.textContent = result;
+})();
+
+// ReLU demo
+(function() {
+    const vals = [-5,-2,-1,0,1,3,5,8];
+    const container = document.getElementById('relu-demo');
+    if (!container) return;
+    vals.forEach(v => {
+        const wrap = document.createElement('div');
+        wrap.style.cssText = 'text-align:center;cursor:pointer;transition:.25s;';
+        const box = document.createElement('div');
+        box.style.cssText = `width:44px;height:44px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;border:1.5px solid;transition:.25s;
+            background:${v < 0 ? 'rgba(239,68,68,0.08)' : v === 0 ? 'rgba(180,180,180,0.1)' : 'rgba(0,184,148,0.1)'};
+            border-color:${v < 0 ? 'rgba(239,68,68,0.25)' : v === 0 ? 'rgba(180,180,180,0.25)' : 'rgba(0,184,148,0.3)'};
+            color:${v < 0 ? '#b91c1c' : v === 0 ? 'var(--clr-text-subtle)' : '#007a62'};`;
+        box.textContent = v;
+        const label = document.createElement('div');
+        label.style.cssText = 'font-size:9px;color:var(--clr-text-subtle);margin-top:4px;';
+        label.textContent = `→ ${Math.max(0, v)}`;
+        wrap.appendChild(box);
+        wrap.appendChild(label);
+        wrap.addEventListener('mouseenter', () => {
+            box.style.transform = 'scale(1.12)';
+            const out = Math.max(0, v);
+            box.style.background = out > 0 ? 'rgba(0,184,148,0.2)' : 'rgba(239,68,68,0.15)';
+            box.textContent = `→${out}`;
+        });
+        wrap.addEventListener('mouseleave', () => {
+            box.style.transform = '';
+            box.textContent = v;
+            box.style.background = v < 0 ? 'rgba(239,68,68,0.08)' : v === 0 ? 'rgba(180,180,180,0.1)' : 'rgba(0,184,148,0.1)';
+        });
+        container.appendChild(wrap);
+    });
+})();
+
+// Pool demo
+(function() {
+    const inputVals = [9,2,7,4, 3,8,1,6, 5,0,4,3, 2,7,1,8];
+    const pIn  = document.getElementById('pool-input');
+    const pOut = document.getElementById('pool-output');
+    if (!pIn) return;
+
+    const cells = [];
+    inputVals.forEach((v, i) => {
+        const c = document.createElement('div');
+        c.className = 'matrix-cell';
+        c.style.cssText = `background:rgba(58,111,244,${v/12});border:1.5px solid rgba(58,111,244,0.2);color:var(--clr-text);font-size:13px;`;
+        c.textContent = v;
+        pIn.appendChild(c);
+        cells.push(c);
+    });
+    // 2x2 max pool → 2x2
+    const regions = [[0,1,4,5],[2,3,6,7],[8,9,12,13],[10,11,14,15]];
+    const maxVals = regions.map(r => Math.max(...r.map(i => inputVals[i])));
+    maxVals.forEach((v, idx) => {
+        const c = document.createElement('div');
+        c.className = 'matrix-cell';
+        c.style.cssText = `background:rgba(0,184,148,0.18);border:1.5px solid rgba(0,184,148,0.4);color:#007a62;font-size:13px;font-weight:800;`;
+        c.textContent = v;
+        pOut.appendChild(c);
+        c.addEventListener('mouseenter', () => {
+            regions[idx].forEach(i => {
+                cells[i].style.background = inputVals[i] === v
+                    ? 'rgba(0,184,148,0.3)' : 'rgba(58,111,244,0.06)';
+                cells[i].style.borderColor = inputVals[i] === v
+                    ? 'rgba(0,184,148,0.6)' : 'rgba(58,111,244,0.15)';
+            });
+        });
+        c.addEventListener('mouseleave', () => {
+            regions[idx].forEach(i => {
+                cells[i].style.background = `rgba(58,111,244,${inputVals[i]/12})`;
+                cells[i].style.borderColor = 'rgba(58,111,244,0.2)';
+            });
+        });
+    });
+})();
+
+// FC nodes
+(function() {
+    const inp = document.getElementById('fc-input-nodes');
+    const out = document.getElementById('fc-output-nodes');
+    const svg = document.getElementById('fc-lines');
+    if (!inp) return;
+    const nc = 6, no = 3;
+    for (let i = 0; i < nc; i++) {
+        const n = document.createElement('div');
+        n.style.cssText = 'width:14px;height:14px;border-radius:50%;background:rgba(245,158,11,0.55);border:1.5px solid rgba(245,158,11,0.8);';
+        inp.appendChild(n);
+    }
+    for (let i = 0; i < no; i++) {
+        const n = document.createElement('div');
+        n.style.cssText = 'width:16px;height:16px;border-radius:50%;background:rgba(239,68,68,0.55);border:1.5px solid rgba(239,68,68,0.8);';
+        out.appendChild(n);
+    }
+    // Draw simple SVG lines
+    const inY = [6,21,36,51,66,81], outY = [20,50,80];
+    let paths = '';
+    inY.forEach(iy => outY.forEach(oy => {
+        paths += `<line x1="0" y1="${iy}" x2="40" y2="${oy}" stroke="rgba(58,111,244,0.18)" stroke-width="1"/>`;
+    }));
+    svg.innerHTML = paths;
+})();
+
+// Softmax bars
+(function() {
+    const container = document.getElementById('softmax-bars');
+    if (!container) return;
+    const items = [
+        { label: '🐱 貓', prob: 0.82, color: 'var(--clr-primary)' },
+        { label: '🐶 狗', prob: 0.15, color: 'var(--clr-accent)' },
+        { label: '🐦 鳥', prob: 0.03, color: 'var(--clr-accent-2)' },
+    ];
+    items.forEach(item => {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:10px;margin-bottom:10px;';
+        row.innerHTML = `
+            <span style="width:52px;font-size:13px;font-weight:700;color:var(--clr-text);">${item.label}</span>
+            <div style="flex:1;height:22px;background:var(--clr-bg-alt);border-radius:20px;overflow:hidden;border:1px solid var(--clr-border);">
+                <div class="bar-fill" style="height:100%;width:0%;background:${item.color};border-radius:20px;transition:width 1s cubic-bezier(.4,0,.2,1);display:flex;align-items:center;justify-content:flex-end;padding-right:8px;">
+                    <span style="font-size:11px;font-weight:700;color:#fff;">${Math.round(item.prob*100)}%</span>
+                </div>
+            </div>
+        `;
+        container.appendChild(row);
+        setTimeout(() => {
+            row.querySelector('.bar-fill').style.width = (item.prob * 100) + '%';
+        }, 300);
+    });
+
+    // Re-animate when tab is activated
+    const outTab = document.querySelector('[data-panel="p-out"]');
+    if (outTab) {
+        outTab.addEventListener('click', () => {
+            container.querySelectorAll('.bar-fill').forEach((b, i) => {
+                b.style.width = '0%';
+                setTimeout(() => { b.style.width = (items[i].prob * 100) + '%'; }, 100);
+            });
+        });
+    }
+})();
+</script>
 </body>
 </html>
