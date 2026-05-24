@@ -68,6 +68,11 @@
             </div>
             <div class="hero__card-divider"></div>
             <div class="hero__card-item">
+                <div class="label">姓名</div>
+                <div class="value">李翊豪</div>
+            </div>
+            <div class="hero__card-divider"></div>
+            <div class="hero__card-item">
                 <div class="label">主題</div>
                 <div class="value">CNN 演算法</div>
             </div>
@@ -80,6 +85,27 @@
     </div>
     <div class="hero__scroll-hint">Scroll</div>
 </section>
+
+<!-- ===== TOC SIDEBAR ===== -->
+<button class="toc-toggle" id="toc-toggle" aria-label="開關目錄">📑 目錄</button>
+<aside class="toc-sidebar" id="toc-sidebar">
+    <div class="toc-title">目錄大綱</div>
+    <ul class="toc-list">
+        <li><a href="#intro" class="toc-link">Task 01 演算法介紹</a>
+            <ul class="toc-sublist">
+                <li><a href="#sec-1-1" class="toc-link">1.1 定義與背景</a></li>
+                <li><a href="#sec-1-2" class="toc-link">1.2 主要解決的問題</a></li>
+                <li><a href="#sec-1-3" class="toc-link">1.3 基本運作流程</a></li>
+                <li><a href="#sec-1-4" class="toc-link">1.4 常見應用領域</a></li>
+            </ul>
+        </li>
+        <li><a href="#ai-record" class="toc-link">Task 02 AI 學習紀錄</a></li>
+        <li><a href="#verify" class="toc-link">Task 03 查證與修正</a></li>
+        <li><a href="#visualize" class="toc-link">Task 04 視覺化</a></li>
+        <li><a href="#cases" class="toc-link">Task 05 應用案例</a></li>
+        <li><a href="#reflection" class="toc-link">Task 06 學習反思</a></li>
+    </ul>
+</aside>
 
 <!-- ===== MAIN ===== -->
 <main>
@@ -99,20 +125,20 @@
     </div>
 
     <!-- 1.1 -->
-    <h3 class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+    <h3 id="sec-1-1" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
         <span style="opacity:.5;">1.1</span> 定義與背景
     </h3>
     <p class="lead-text reveal">
-        <strong>卷積神經網路（Convolutional Neural Network，簡稱 CNN）</strong>是一種深度學習演算法，專門用來處理具有「網格狀結構」的資料，而最常見的應用對象就是影像。CNN 的設計靈感源自人類的視覺神經系統——人類的視覺皮層中，不同區域的神經元只對視野中特定範圍的刺激有反應，CNN 正是模仿這種「局部感知」的機制。
+        <strong>卷積神經網路（Convolutional Neural Network，簡稱 CNN）</strong>是一種深度學習演算法，專門用來處理具有「網格狀結構」的資料，而最常見的應用對象就是影像（2D 網格）或音訊頻譜（1D 網格）。CNN 的設計靈感源自人類與動物的視覺神經系統——1950 年代神經科學家 Hubel 與 Wiesel 對貓的視覺皮層進行實驗，發現大腦中存在對特定方向邊緣敏感的「簡單細胞」與「複雜細胞」。不同區域的神經元只對視野中特定範圍的刺激有反應，CNN 的「卷積層」與「池化層」正是巧妙地模仿了這種「局部感知」與「特徵階層式整合」的生理機制。
     </p>
     <p class="lead-text reveal">
-        1998 年，Yann LeCun 等人發表了 LeNet 架構，將 CNN 應用於手寫數字辨識，奠定了現代 CNN 的基礎。如今，CNN 已成為<strong>電腦視覺（Computer Vision）</strong>領域中最核心的技術之一，廣泛應用於人臉辨識、醫療影像分析、自動駕駛等場景。
+        在歷史發展上，1998 年 Yann LeCun 等人發表了著名的 <strong>LeNet-5 架構</strong>，成功將 CNN 應用於銀行支票的手寫數字辨識，奠定了現代 CNN 的基礎。然而，受限於當時的硬體算力與資料量，CNN 沉寂了一段時間。直到 2012 年，<strong>AlexNet</strong> 在 ImageNet 大型影像辨識挑戰賽中以壓倒性的優勢奪冠，才正式引爆了這波深度學習與人工智慧的狂潮。如今，經歷了 VGG、ResNet、EfficientNet 等架構的演進，CNN 已成為<strong>電腦視覺（Computer Vision）</strong>領域中不可或缺的最核心技術，深刻改變了人臉辨識、醫療影像分析、自動駕駛與無人機導航等無數現代科技場景。
     </p>
 
     <div class="divider"></div>
 
     <!-- 1.2 -->
-    <h3 class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+    <h3 id="sec-1-2" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
         <span style="opacity:.5;">1.2</span> 主要解決的問題
     </h3>
     <p class="reveal" style="font-size:.9rem;color:var(--clr-text-muted);margin-bottom:18px;line-height:1.75;">
@@ -140,12 +166,26 @@
                 <div class="problem-item__desc">傳統方法的致命弱點是：同一隻貓出現在圖片左上角或右下角，模型可能無法辨識為同一事物。CNN 的卷積核以<strong>滑動掃描</strong>的方式遍歷整張影像，確保無論特徵出現在哪個位置，都能被準確捕捉。</div>
             </div>
         </div>
+        <div class="problem-item ripple-host reveal">
+            <div class="problem-item__badge">🔍</div>
+            <div>
+                <div class="problem-item__title">局部特徵提取（Local Feature Extraction）</div>
+                <div class="problem-item__desc">傳統神經網路每個神經元都要看整張圖片，難以聚焦細節。CNN 利用小型卷積核（如 3×3）專注於圖片的局部區域，能極為精準地提取邊緣、角點、紋理等基礎視覺特徵，再交由深層網路組合。</div>
+            </div>
+        </div>
+        <div class="problem-item ripple-host reveal">
+            <div class="problem-item__badge">🏗️</div>
+            <div>
+                <div class="problem-item__title">特徵層次結構（Hierarchical Representation）</div>
+                <div class="problem-item__desc">圖片理解需要從微觀到宏觀。CNN 的多層架構能夠自然地形成「層次化」特徵：淺層學習點與線，中層將線條組合成幾何形狀（如眼睛、車輪），深層則將形狀組合成具體語義物件（如人臉、汽車），完美契合人類認知模式。</div>
+            </div>
+        </div>
     </div>
 
     <div class="divider"></div>
 
     <!-- 1.3 Flow Steps -->
-    <h3 class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:18px;display:flex;align-items:center;gap:8px;">
+    <h3 id="sec-1-3" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:18px;display:flex;align-items:center;gap:8px;">
         <span style="opacity:.5;">1.3</span> 基本運作流程
     </h3>
     <div class="card reveal">
@@ -198,7 +238,7 @@
     <div class="divider"></div>
 
     <!-- 1.4 Applications -->
-    <h3 class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+    <h3 id="sec-1-4" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
         <span style="opacity:.5;">1.4</span> 常見應用領域
     </h3>
     <div class="intro-grid">
@@ -702,6 +742,26 @@
                 <span class="example-chip">鋼材裂縫</span>
             </div>
         </div>
+        <div class="case-card case-card--blue ripple-host reveal">
+            <span class="case-card__emoji">🌾</span>
+            <div class="case-card__title">智慧農業與環境監測</div>
+            <div class="case-card__desc">利用無人機拍攝農田影像，並透過 CNN 模型分析農作物生長狀況、辨識病蟲害，甚至能區分雜草與農作物以進行精準噴灑。在環保方面，也能透過衛星影像自動追蹤森林砍伐面積或海洋塑膠垃圾。</div>
+            <div class="case-card__examples">
+                <span class="example-chip">病蟲害辨識</span>
+                <span class="example-chip">產量預測</span>
+                <span class="example-chip">森林保育</span>
+            </div>
+        </div>
+        <div class="case-card case-card--teal ripple-host reveal">
+            <span class="case-card__emoji">🛒</span>
+            <div class="case-card__title">智慧零售與無人商店</div>
+            <div class="case-card__desc">如 Amazon Go 透過店內密布的攝影機，運用 CNN 即時追蹤顧客的移動軌跡以及從貨架上拿取或放回商品的動作，實現「拿了就走」的無感結帳體驗，同時也協助分析店內客流熱區。</div>
+            <div class="case-card__examples">
+                <span class="example-chip">無感結帳</span>
+                <span class="example-chip">客流分析</span>
+                <span class="example-chip">智慧庫存</span>
+            </div>
+        </div>
     </div>
 
     <div class="divider"></div>
@@ -774,7 +834,7 @@
     <div class="container">
         <div class="footer__text">
             <strong>CNN 演算法介紹 — 期末評量成果</strong><br>
-            學號：111316016 ｜ 主題：卷積神經網路（CNN）<br>
+            學號：111316016 ｜ 姓名：李翊豪 ｜ 主題：卷積神經網路（CNN）<br>
             <span style="font-size:.75rem;margin-top:6px;display:block;">本頁面內容為個人學習成果，部分概念參考學術論文及課程資料，並輔以 AI 工具協助理解。</span>
         </div>
     </div>

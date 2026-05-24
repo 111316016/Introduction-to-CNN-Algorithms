@@ -1,8 +1,25 @@
 /* ---- 1. Nav scroll shadow ---- */
 const nav = document.getElementById('main-nav');
 window.addEventListener('scroll', () => {
-    nav.classList.toggle('nav--scrolled', window.scrollY > 20);
+    if(nav) nav.classList.toggle('nav--scrolled', window.scrollY > 20);
 });
+
+/* ---- TOC Sidebar Toggle ---- */
+const tocToggle = document.getElementById('toc-toggle');
+const tocSidebar = document.getElementById('toc-sidebar');
+if (tocToggle && tocSidebar) {
+    tocToggle.addEventListener('click', () => {
+        tocSidebar.classList.toggle('show');
+    });
+    // 點擊連結後，如果是小螢幕就自動收起目錄
+    tocSidebar.querySelectorAll('.toc-link').forEach(link => {
+        link.addEventListener('click', () => {
+            if (window.innerWidth <= 1450) {
+                tocSidebar.classList.remove('show');
+            }
+        });
+    });
+}
 
 /* ---- 2. Section progress dots + nav highlight ---- */
 const sections = document.querySelectorAll('section[id]');
