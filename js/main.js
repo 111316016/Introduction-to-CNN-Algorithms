@@ -2,6 +2,7 @@
 const nav = document.getElementById('main-nav');
 const progressBar = document.getElementById('reading-progress-bar');
 const backToTopBtn = document.getElementById('back-to-top');
+const goToBottomBtn = document.getElementById('go-to-bottom');
 
 window.addEventListener('scroll', () => {
     // Nav shadow
@@ -438,5 +439,123 @@ document.querySelectorAll('.ripple-host').forEach(el => {
         ? document.addEventListener('DOMContentLoaded', init)
         : init();
 })();
+/* ---- 6. Back to top ---- */
 
+window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY > 300;
+    if (backToTopBtn) {
+        backToTopBtn.classList.toggle('visible', scrolled);
+    }
+    // Show go-to-bottom only when not near the bottom
+    const nearBottom = window.scrollY + window.innerHeight >= document.body.scrollHeight - 200;
+    if (goToBottomBtn) {
+        goToBottomBtn.classList.toggle('visible', scrolled && !nearBottom);
+    }
+}, { passive: true });
 
+if (backToTopBtn) {
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
+
+if (goToBottomBtn) {
+    goToBottomBtn.addEventListener('click', () => {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    });
+}
+
+/* ---- 7. TOC: Auto-expand active section, collapse others ---- */
+// Map section IDs to their TOC parent <li> elements
+const sectionToTocMap = {
+    'intro':       document.querySelector('.toc-has-sub:nth-child(1)'),
+    'ai-record':   document.querySelector('.toc-has-sub:nth-child(2)'),
+    'verify':      document.querySelector('.toc-has-sub:nth-child(3)'),
+    'visualize':   document.querySelector('.toc-has-sub:nth-child(4)'),
+    'cases':       document.querySelector('.toc-has-sub:nth-child(5)'),
+    'reflection':  document.querySelector('.toc-has-sub:nth-child(6)'),
+    'sources':     document.querySelector('.toc-has-sub:nth-child(7)'),
+};
+
+function setTocActiveSection(id) {
+    Object.entries(sectionToTocMap).forEach(([sectionId, li]) => {
+        if (!li) return;
+        const subList = li.querySelector('.toc-sublist');
+        const btn = li.querySelector('.toc-collapse-btn');
+        const isActive = sectionId === id;
+        if (subList) {
+            if (isActive) {
+                subList.classList.add('toc-sublist--open');
+            } else {
+                subList.classList.remove('toc-sublist--open');
+            }
+        }
+        if (btn) {
+            btn.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+        }
+    });
+}
+
+// Use the existing sectionObserver data — track which main section is in view
+const mainSections = ['intro', 'ai-record', 'verify', 'visualize', 'cases', 'reflection', 'sources'];
+let tocExpandTimeout = null;
+
+const tocSectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting && mainSections.includes(entry.target.id)) {
+            if (tocExpandTimeout) {
+                clearTimeout(tocExpandTimeout);
+            }
+            tocExpandTimeout = setTimeout(() => {
+                setTocActiveSection(entry.target.id);
+            }, 500); // Delay to prevent flashing during fast scrolling
+        }
+    });
+}, { rootMargin: '-20% 0px -60% 0px', threshold: 0 });
+
+mainSections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) tocSectionObserver.observe(el);
+});
+
+/* ---- 8. Image Lightbox ---- */
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightbox-img');
+const lightboxClose = document.getElementById('lightbox-close');
+
+if (lightbox && lightboxImg && lightboxClose) {
+    // Select all images inside .section, excluding avatars or ui elements if needed
+    const contentImages = document.querySelectorAll('.section img');
+    
+    contentImages.forEach(img => {
+        img.addEventListener('click', () => {
+            lightboxImg.src = img.src;
+            lightboxImg.alt = img.alt;
+            lightbox.classList.add('active');
+            lightbox.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling
+        });
+    });
+
+    const closeLightbox = () => {
+        lightbox.classList.remove('active');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        setTimeout(() => { lightboxImg.src = ''; }, 300); // Clear after animation
+    };
+
+    lightboxClose.addEventListener('click', closeLightbox);
+    
+    lightbox.addEventListener('click', (e) => {
+        // Close if clicked outside the image
+        if (e.target === lightbox) {
+            closeLightbox();
+        }
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+            closeLightbox();
+        }
+    });
+}
