@@ -203,7 +203,17 @@ document.querySelectorAll('.ripple-host').forEach(el => {
             for (let kc = 0; kc < KS; kc++) {
                 const iv = input[wr + kr][wc + kc], kv = kernel[kr][kc], prod = iv * kv;
                 const col = prod > 0 ? 'var(--clr-primary)' : prod < 0 ? 'var(--clr-danger)' : 'var(--clr-text-subtle)';
-                if (kc > 0 || kr > 0) rowTerms += `<span class="formula-plus"> + </span>`;
+                
+                if (kc === 0) {
+                    if (kr === 0) {
+                        rowTerms += `<span class="formula-plus"> = </span>`;
+                    } else {
+                        rowTerms += `<span class="formula-plus"> + </span>`;
+                    }
+                } else {
+                    rowTerms += `<span class="formula-plus"> + </span>`;
+                }
+                
                 rowTerms += `<span class="formula-term" style="color:${col};">(${iv}×${kv})</span>`;
                 const dcol = prod > 0 ? 'var(--clr-primary-d)' : prod < 0 ? '#b91c1c' : 'var(--clr-text-subtle)';
                 detailParts += `<span class="detail-term">input[${wr+kr}][${wc+kc}]<b>(${iv})</b>×kernel[${kr}][${kc}]<b>(${kv})</b>=<b style="color:${dcol}">${prod}</b></span>`;
