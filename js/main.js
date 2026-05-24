@@ -1,8 +1,33 @@
-/* ---- 1. Nav scroll shadow ---- */
+/* ---- 1. Nav scroll shadow, Reading Progress, Back to Top ---- */
 const nav = document.getElementById('main-nav');
+const progressBar = document.getElementById('reading-progress-bar');
+const backToTopBtn = document.getElementById('back-to-top');
+
 window.addEventListener('scroll', () => {
-    if(nav) nav.classList.toggle('nav--scrolled', window.scrollY > 20);
+    // Nav shadow
+    if (nav) nav.classList.toggle('nav--scrolled', window.scrollY > 20);
+    
+    // Reading progress
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    if (progressBar) progressBar.style.width = scrolled + '%';
+    
+    // Back to top button
+    if (backToTopBtn) {
+        if (winScroll > 500) {
+            backToTopBtn.classList.add('show');
+        } else {
+            backToTopBtn.classList.remove('show');
+        }
+    }
 });
+
+if (backToTopBtn) {
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+}
 
 /* ---- TOC Sidebar Toggle ---- */
 const tocToggle = document.getElementById('toc-toggle');

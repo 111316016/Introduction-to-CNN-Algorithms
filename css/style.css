@@ -1026,3 +1026,38 @@ body {
         transform: translateX(0);
     }
 }
+
+/* ===== UX ENHANCEMENTS ===== */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--clr-primary);
+    color: #fff;
+    border: none;
+    box-shadow: 0 4px 12px rgba(58,111,244,0.3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 90;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.3s ease;
+}
+.back-to-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.back-to-top:hover {
+    background: var(--clr-primary-d);
+    transform: translateY(-3px);
+}
+@media (max-width: 768px) {
+    .back-to-top { bottom: 20px; right: 20px; width: 44px; height: 44px; }
+}

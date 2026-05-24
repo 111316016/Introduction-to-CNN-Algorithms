@@ -28,6 +28,9 @@
             <li><a href="#reflection" id="nav-ref">學習反思</a></li>
         </ul>
     </div>
+    <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: transparent;">
+        <div id="reading-progress-bar" style="height: 100%; background: linear-gradient(90deg, var(--clr-primary), var(--clr-accent)); width: 0%; border-radius: 0 2px 2px 0;"></div>
+    </div>
 </nav>
 
 <!-- ===== SIDE PROGRESS ===== -->
@@ -97,6 +100,8 @@
                 <li><a href="#sec-1-2" class="toc-link">1.2 主要解決的問題</a></li>
                 <li><a href="#sec-1-3" class="toc-link">1.3 基本運作流程</a></li>
                 <li><a href="#sec-1-4" class="toc-link">1.4 常見應用領域</a></li>
+                <li><a href="#sec-1-5" class="toc-link">1.5 關鍵超參數</a></li>
+                <li><a href="#sec-1-6" class="toc-link">1.6 程式碼實作</a></li>
             </ul>
         </li>
         <li><a href="#ai-record" class="toc-link">Task 02 AI 學習紀錄</a></li>
@@ -262,6 +267,61 @@
             <div class="intro-card__title">影像生成與風格遷移</div>
             <div class="intro-card__text">將一張照片的藝術風格套用到另一張圖片，或生成真實感極高的虛假影像（GAN）。</div>
         </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 1.5 -->
+    <h3 id="sec-1-5" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+        <span style="opacity:.5;">1.5</span> 關鍵超參數：Padding 與 Stride
+    </h3>
+    <p class="reveal" style="font-size:.9rem;color:var(--clr-text-muted);margin-bottom:18px;line-height:1.75;">
+        在設計卷積層時，有兩個非常重要的超參數（Hyperparameters）決定了輸出特徵圖的尺寸與資訊保留程度：
+    </p>
+    <div class="problems-list">
+        <div class="problem-item ripple-host reveal">
+            <div class="problem-item__badge">🔲</div>
+            <div>
+                <div class="problem-item__title">填充（Padding）</div>
+                <div class="problem-item__desc">如果不做任何處理，每次卷積後圖片都會縮小，且邊緣的像素只會被卷積核掃過一次（容易流失邊緣特徵）。<strong>Padding</strong> 是在原始圖片的外圍補上一圈 0（Zero-padding），讓卷積核可以掃過邊緣，維持輸入與輸出的空間維度一致。</div>
+            </div>
+        </div>
+        <div class="problem-item ripple-host reveal">
+            <div class="problem-item__badge">🏃</div>
+            <div>
+                <div class="problem-item__title">步幅（Stride）</div>
+                <div class="problem-item__desc"><strong>Stride</strong> 指的是卷積核每次滑動的步長。預設值通常為 1（每次移動一格）。如果設定為 2，則卷積核每次會跳過一格，這會使輸出的特徵圖長寬直接減半。Stride 常被用來取代池化層進行大幅降維。</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 1.6 -->
+    <h3 id="sec-1-6" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+        <span style="opacity:.5;">1.6</span> 程式碼實作範例（PyTorch）
+    </h3>
+    <p class="reveal" style="font-size:.9rem;color:var(--clr-text-muted);margin-bottom:14px;line-height:1.75;">
+        以上理論如何轉化為實際的程式碼呢？在深度學習框架 PyTorch 中，建構一個包含「卷積」與「池化」的簡單 CNN 模型只需要短短幾行：
+    </p>
+    <div class="card reveal" style="padding: 0; overflow: hidden; background: #1e1e1e; border-color: #333;">
+        <pre style="margin: 0; padding: 20px; color: #d4d4d4; font-family: 'Courier New', Consolas, monospace; font-size: 13.5px; line-height: 1.6; overflow-x: auto;"><code><span style="color:#c586c0;">import</span> torch.nn <span style="color:#c586c0;">as</span> nn
+
+<span style="color:#569cd6;">class</span> <span style="color:#4ec9b0;">SimpleCNN</span>(nn.Module):
+    <span style="color:#569cd6;">def</span> <span style="color:#dcdcaa;">__init__</span>(<span style="color:#9cdcfe;">self</span>):
+        <span style="color:#569cd6;">super</span>().__init__()
+        <span style="color:#6a9955;"># 定義卷積層：輸入通道 1 (灰階), 輸出 32 張特徵圖, 卷積核 3x3, 步幅 1, 填充 1</span>
+        <span style="color:#9cdcfe;">self</span>.conv1 = nn.Conv2d(<span style="color:#b5cea8;">1</span>, <span style="color:#b5cea8;">32</span>, kernel_size=<span style="color:#b5cea8;">3</span>, stride=<span style="color:#b5cea8;">1</span>, padding=<span style="color:#b5cea8;">1</span>)
+        <span style="color:#6a9955;"># 定義 ReLU 激活函數</span>
+        <span style="color:#9cdcfe;">self</span>.relu = nn.ReLU()
+        <span style="color:#6a9955;"># 定義最大池化層：視窗 2x2, 步幅 2</span>
+        <span style="color:#9cdcfe;">self</span>.pool = nn.MaxPool2d(kernel_size=<span style="color:#b5cea8;">2</span>, stride=<span style="color:#b5cea8;">2</span>)
+
+    <span style="color:#569cd6;">def</span> <span style="color:#dcdcaa;">forward</span>(<span style="color:#9cdcfe;">self</span>, <span style="color:#9cdcfe;">x</span>):
+        x = <span style="color:#9cdcfe;">self</span>.conv1(x)  <span style="color:#6a9955;"># 1. 特徵提取</span>
+        x = <span style="color:#9cdcfe;">self</span>.relu(x)   <span style="color:#6a9955;"># 2. 非線性轉換</span>
+        x = <span style="color:#9cdcfe;">self</span>.pool(x)   <span style="color:#6a9955;"># 3. 降維與特徵保留</span>
+        <span style="color:#c586c0;">return</span> x</code></pre>
     </div>
 </div>
 </section>
@@ -773,10 +833,15 @@
         <p style="font-size:.9rem;color:var(--clr-text-muted);line-height:1.85;margin-bottom:14px;">
             這個案例的意義在於：CNN 無需人工設計「什麼是惡性腫瘤的特徵」，而是從數十萬張圖片中<strong style="color:#007a62;">自動學習</strong>到醫師花數年才能習得的視覺診斷模式。這正體現了深度學習最根本的革命性——讓機器從數據中自主歸納規律。
         </p>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <span class="tag--teal">Nature 2017</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+            <span class="tag tag--teal">Nature 2017</span>
             <span class="tag">Stanford University</span>
-            <span class="tag--purple">皮膚癌偵測</span>
+            <span class="tag tag--purple">皮膚癌偵測</span>
+        </div>
+        <div>
+            <a href="https://scitechvista.nat.gov.tw/Article/c000003/detail?ID=a077826c-f9e9-4dea-a5c5-470803c3139b" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--clr-primary);text-decoration:none;padding:8px 16px;border-radius:6px;background:rgba(58,111,244,0.1);transition:var(--transition);" onmouseover="this.style.background='rgba(58,111,244,0.2)'" onmouseout="this.style.background='rgba(58,111,244,0.1)'">
+                延伸閱讀：AI 如何辨識皮膚癌 🔗
+            </a>
         </div>
     </div>
 </div>
@@ -839,6 +904,10 @@
         </div>
     </div>
 </footer>
+
+<button class="back-to-top" id="back-to-top" aria-label="回到頂部">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
 
 <!-- ===== JAVASCRIPT ===== -->
 <script src="js/main.js"></script>
