@@ -16,7 +16,13 @@
 <nav class="nav" id="main-nav">
     <div class="nav__inner">
         <a href="#hero" class="nav__brand">
-            <span class="nav__brand-icon">🧠</span>
+            <span class="nav__brand-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                    <polyline points="2 12 12 17 22 12"></polyline>
+                    <polyline points="2 17 12 22 22 17"></polyline>
+                </svg>
+            </span>
             CNN 演算法介紹
         </a>
         <ul class="nav__links">
@@ -26,10 +32,11 @@
             <li><a href="#visualize"  id="nav-viz">視覺化</a></li>
             <li><a href="#cases"      id="nav-cases">應用案例</a></li>
             <li><a href="#reflection" id="nav-ref">學習反思</a></li>
+            <li><a href="#sources"    id="nav-sources">資料來源</a></li>
         </ul>
     </div>
     <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: 3px; background: transparent;">
-        <div id="reading-progress-bar" style="height: 100%; background: linear-gradient(90deg, var(--clr-primary), var(--clr-accent)); width: 0%; border-radius: 0 2px 2px 0;"></div>
+        <div id="reading-progress-bar" style="height: 100%; background: linear-gradient(90deg, var(--clr-primary-bright), var(--clr-primary)); width: 0%; border-radius: 0 2px 2px 0;"></div>
     </div>
 </nav>
 
@@ -42,6 +49,7 @@
     <div class="progress-dot"        data-target="visualize"  title="視覺化"></div>
     <div class="progress-dot"        data-target="cases"      title="應用案例"></div>
     <div class="progress-dot"        data-target="reflection" title="學習反思"></div>
+    <div class="progress-dot"        data-target="sources"    title="資料來源"></div>
 </nav>
 
 <!-- ===== HERO ===== -->
@@ -92,23 +100,89 @@
 <!-- ===== TOC SIDEBAR ===== -->
 <button class="toc-toggle" id="toc-toggle" aria-label="開關目錄">📑 目錄</button>
 <aside class="toc-sidebar" id="toc-sidebar">
-    <div class="toc-title">目錄大綱</div>
+    <div class="toc-header">
+        <div class="toc-title">目錄大綱</div>
+        <button class="toc-close" id="toc-close" aria-label="收起目錄" title="收起目錄">✕</button>
+    </div>
     <ul class="toc-list">
-        <li><a href="#intro" class="toc-link">Task 01 演算法介紹</a>
-            <ul class="toc-sublist">
-                <li><a href="#sec-1-1" class="toc-link">1.1 定義與背景</a></li>
-                <li><a href="#sec-1-2" class="toc-link">1.2 主要解決的問題</a></li>
-                <li><a href="#sec-1-3" class="toc-link">1.3 基本運作流程</a></li>
-                <li><a href="#sec-1-4" class="toc-link">1.4 常見應用領域</a></li>
-                <li><a href="#sec-1-5" class="toc-link">1.5 關鍵超參數</a></li>
-                <li><a href="#sec-1-6" class="toc-link">1.6 程式碼實作</a></li>
+        <li class="toc-has-sub">
+            <div class="toc-row">
+                <a href="#intro" class="toc-link toc-link--parent" data-scroll>Task 01 演算法介紹</a>
+                <button class="toc-collapse-btn" aria-label="折疊子項目" aria-expanded="true">▾</button>
+            </div>
+            <ul class="toc-sublist toc-sublist--open" id="sub-task01">
+                <li><a href="#sec-1-1" class="toc-link" data-scroll>1.1 定義與背景</a></li>
+                <li><a href="#sec-1-2" class="toc-link" data-scroll>1.2 主要解決的問題</a></li>
+                <li><a href="#sec-1-3" class="toc-link" data-scroll>1.3 基本運作流程</a></li>
+                <li><a href="#sec-1-4" class="toc-link" data-scroll>1.4 常見應用領域</a></li>
+                <li><a href="#sec-1-5" class="toc-link" data-scroll>1.5 關鍵超參數</a></li>
+                <li><a href="#sec-1-6" class="toc-link" data-scroll>1.6 程式碼實作</a></li>
             </ul>
         </li>
-        <li><a href="#ai-record" class="toc-link">Task 02 AI 學習紀錄</a></li>
-        <li><a href="#verify" class="toc-link">Task 03 查證與修正</a></li>
-        <li><a href="#visualize" class="toc-link">Task 04 視覺化</a></li>
-        <li><a href="#cases" class="toc-link">Task 05 應用案例</a></li>
-        <li><a href="#reflection" class="toc-link">Task 06 學習反思</a></li>
+        <li class="toc-has-sub">
+            <div class="toc-row">
+                <a href="#ai-record" class="toc-link toc-link--parent" data-scroll>Task 02 AI 學習紀錄</a>
+                <button class="toc-collapse-btn" aria-label="折疊子項目" aria-expanded="true">▾</button>
+            </div>
+            <ul class="toc-sublist toc-sublist--open">
+                <li><a href="#sec-2-1" class="toc-link" data-scroll>2.1 問答摘要整理</a></li>
+                <li><a href="#sec-2-2" class="toc-link" data-scroll>2.2 對話示例</a></li>
+                <li><a href="#sec-2-3" class="toc-link" data-scroll>2.3 整體評估</a></li>
+            </ul>
+        </li>
+        <li class="toc-has-sub">
+            <div class="toc-row">
+                <a href="#verify" class="toc-link toc-link--parent" data-scroll>Task 03 查證與修正</a>
+                <button class="toc-collapse-btn" aria-label="折疊子項目" aria-expanded="true">▾</button>
+            </div>
+            <ul class="toc-sublist toc-sublist--open">
+                <li><a href="#sec-3-1" class="toc-link" data-scroll>3.1 查證主題</a></li>
+                <li><a href="#sec-3-2" class="toc-link" data-scroll>3.2 查證過程</a></li>
+                <li><a href="#sec-3-3" class="toc-link" data-scroll>3.3 資料來源</a></li>
+                <li><a href="#sec-3-4" class="toc-link" data-scroll>3.4 查證結論</a></li>
+            </ul>
+        </li>
+        <li class="toc-has-sub">
+            <div class="toc-row">
+                <a href="#visualize" class="toc-link toc-link--parent" data-scroll>Task 04 視覺化</a>
+                <button class="toc-collapse-btn" aria-label="折疊子項目" aria-expanded="true">▾</button>
+            </div>
+            <ul class="toc-sublist toc-sublist--open">
+                <li><a href="#sec-4-1" class="toc-link" data-scroll>4.1 架構資料流向圖</a></li>
+                <li><a href="#sec-4-2" class="toc-link" data-scroll>4.2 互動式卷積運算</a></li>
+            </ul>
+        </li>
+        <li class="toc-has-sub">
+            <div class="toc-row">
+                <a href="#cases" class="toc-link toc-link--parent" data-scroll>Task 05 應用案例</a>
+                <button class="toc-collapse-btn" aria-label="折疊子項目" aria-expanded="true">▾</button>
+            </div>
+            <ul class="toc-sublist toc-sublist--open">
+                <li><a href="#sec-5-1" class="toc-link" data-scroll>5.1 常見應用領域</a></li>
+                <li><a href="#sec-5-2" class="toc-link" data-scroll>5.2 深入案例分析</a></li>
+            </ul>
+        </li>
+        <li class="toc-has-sub">
+            <div class="toc-row">
+                <a href="#reflection" class="toc-link toc-link--parent" data-scroll>Task 06 學習反思</a>
+                <button class="toc-collapse-btn" aria-label="折疊子項目" aria-expanded="true">▾</button>
+            </div>
+            <ul class="toc-sublist toc-sublist--open">
+                <li><a href="#sec-6-1" class="toc-link" data-scroll>6.1 學習歷程反思</a></li>
+                <li><a href="#sec-6-2" class="toc-link" data-scroll>6.2 總結與展望</a></li>
+            </ul>
+        </li>
+        <li class="toc-has-sub">
+            <div class="toc-row">
+                <a href="#sources" class="toc-link toc-link--parent" data-scroll>Task 07 資料來源</a>
+                <button class="toc-collapse-btn" aria-label="折疊子項目" aria-expanded="true">▾</button>
+            </div>
+            <ul class="toc-sublist toc-sublist--open">
+                <li><a href="#sec-7-1" class="toc-link" data-scroll>7.1 論文與技術文件</a></li>
+                <li><a href="#sec-7-2" class="toc-link" data-scroll>7.2 網路資源與圖片</a></li>
+                <li><a href="#sec-7-3" class="toc-link" data-scroll>7.3 AI 輔助工具</a></li>
+            </ul>
+        </li>
     </ul>
 </aside>
 
@@ -140,7 +214,29 @@
         在歷史發展上，1998 年 Yann LeCun 等人發表了著名的 <strong>LeNet-5 架構</strong>，成功將 CNN 應用於銀行支票的手寫數字辨識，奠定了現代 CNN 的基礎。然而，受限於當時的硬體算力與資料量，CNN 沉寂了一段時間。直到 2012 年，<strong>AlexNet</strong> 在 ImageNet 大型影像辨識挑戰賽中以壓倒性的優勢奪冠，才正式引爆了這波深度學習與人工智慧的狂潮。如今，經歷了 VGG、ResNet、EfficientNet 等架構的演進，CNN 已成為<strong>電腦視覺（Computer Vision）</strong>領域中不可或缺的最核心技術，深刻改變了人臉辨識、醫療影像分析、自動駕駛與無人機導航等無數現代科技場景。
     </p>
 
+    <div class="figures-row reveal">
+        <figure class="article-figure">
+            <div class="article-figure__img-wrap">
+                <img src="assets/Yann LeCun.jpg" alt="Yann LeCun — CNN 之父" loading="lazy">
+            </div>
+            <figcaption>
+                <strong>Yann LeCun</strong>（楊立昆），CNN 先驅、圖靈獎得主。
+                <a href="https://zh.wikipedia.org/zh-tw/%E6%9D%A8%E7%AB%8B%E6%98%86#/media/File:Yann_LeCun_-_2018_(cropped).jpg" target="_blank" rel="noopener">圖片來源：Wikipedia</a>
+            </figcaption>
+        </figure>
+        <figure class="article-figure article-figure--wide">
+            <div class="article-figure__img-wrap">
+                <img src="assets/LeNet-5.webp" alt="LeNet-5 架構圖" loading="lazy">
+            </div>
+            <figcaption>
+                <strong>LeNet-5 架構</strong>，1998 年由 Yann LeCun 提出的開創性 CNN 網路架構。
+                <a href="https://kilong31442.medium.com/%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF-cnn-%E7%9A%84%E7%B6%93%E5%85%B8%E7%B6%B2%E8%B7%AF%E6%9E%B6%E6%A7%8B-1-lenet-5-alexnet-85524c64c01d" target="_blank" rel="noopener">圖片來源：Medium</a>
+            </figcaption>
+        </figure>
+    </div>
+
     <div class="divider"></div>
+
 
     <!-- 1.2 -->
     <h3 id="sec-1-2" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
@@ -238,6 +334,27 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div class="figures-row reveal" style="margin-top: 24px;">
+        <figure class="article-figure article-figure--wide">
+            <div class="article-figure__img-wrap">
+                <img src="assets/CNN_01.webp" alt="CNN 卷積與池化運算流程" loading="lazy" style="height: 220px; width: 100%; object-fit: contain;">
+            </div>
+            <figcaption>
+                <strong>CNN 特徵提取流程</strong>，展示原圖經過卷積（Convolution）與池化（Pooling）逐步提取特徵圖的過程。
+                <a href="https://chih-sheng-huang821.medium.com/%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF-convolutional-neural-network-cnn-cnn%E9%81%8B%E7%AE%97%E6%B5%81%E7%A8%8B-ecaec240a631" target="_blank" rel="noopener">圖片來源：Medium</a>
+            </figcaption>
+        </figure>
+        <figure class="article-figure article-figure--wide">
+            <div class="article-figure__img-wrap">
+                <img src="assets/CNN_02.webp" alt="CNN 全連接與分類" loading="lazy" style="height: 220px; width: 100%; object-fit: contain;">
+            </div>
+            <figcaption>
+                <strong>分類輸出階段</strong>，特徵圖被展平（Flatten）並送入全連接層（Fully Connected Layer）進行分類預測。
+                <a href="https://chih-sheng-huang821.medium.com/%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF-convolutional-neural-network-cnn-cnn%E9%81%8B%E7%AE%97%E6%B5%81%E7%A8%8B-ecaec240a631" target="_blank" rel="noopener">圖片來源：Medium</a>
+            </figcaption>
+        </figure>
     </div>
 
     <div class="divider"></div>
@@ -340,7 +457,10 @@
         <p class="section__desc">記錄與 AI 的問答過程，以及這些回答如何幫助我建立對 CNN 的完整認識。</p>
     </div>
 
-    <h3 class="reveal" style="font-size:.97rem;font-weight:700;color:var(--clr-text);margin-bottom:14px;">問答摘要整理</h3>
+    <!-- 2.1 -->
+    <h3 id="sec-2-1" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+        <span style="opacity:.5;">2.1</span> 問答摘要整理
+    </h3>
     <div class="ai-table-wrapper reveal" style="margin-bottom:32px;">
         <table class="ai-table">
             <thead>
@@ -386,7 +506,10 @@
         </table>
     </div>
 
-    <h3 class="reveal" style="font-size:.97rem;font-weight:700;color:var(--clr-text);margin-bottom:14px;">對話示例（Q2 詳細過程）</h3>
+    <!-- 2.2 -->
+    <h3 id="sec-2-2" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;margin-top:40px;">
+        <span style="opacity:.5;">2.2</span> 對話示例（Q2 詳細過程）
+    </h3>
     <div class="card card--accent reveal">
         <div class="dialogue">
             <div class="dialogue__msg">
@@ -421,7 +544,11 @@
         </div>
     </div>
 
-    <div class="highlight-box reveal" style="margin-top:22px;">
+    <!-- 2.3 -->
+    <h3 id="sec-2-3" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;margin-top:40px;">
+        <span style="opacity:.5;">2.3</span> 整體評估
+    </h3>
+    <div class="highlight-box reveal" style="margin-top:10px;">
         <strong>AI 輔助學習的整體評估：</strong>AI 能夠根據我的問題給出即時、個人化的解釋，特別是在數學計算範例方面，大幅降低了學習門檻。然而，AI 的回答有時過於簡化，需要進一步追問細節，且部分內容仍需查閱原始文獻加以確認。
     </div>
 </div>
@@ -441,13 +568,20 @@
         <p class="section__desc">針對 AI 回答中的一個核心概念進行獨立查證，並記錄是否需要修正原本的理解。</p>
     </div>
 
+    <!-- 3.1 -->
+    <h3 id="sec-3-1" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+        <span style="opacity:.5;">3.1</span> 查證主題
+    </h3>
     <div class="card card--purple reveal" style="margin-bottom:24px;">
         <div style="margin-bottom:10px;"><span class="tag--purple">查證主題</span></div>
         <h3 style="font-size:1rem;font-weight:700;color:var(--clr-text);margin-bottom:8px;">「ReLU 函數能有效解決梯度消失問題」</h3>
         <p style="font-size:.87rem;color:var(--clr-text-muted);line-height:1.75;">AI 在回答 Q3 時提到，ReLU 相比 Sigmoid 函數「不容易出現梯度消失問題」。這是一個關鍵論點，但我認為有必要進一步查證，確認這項陳述的準確性與完整性。</p>
     </div>
 
-    <h3 class="reveal" style="font-size:.97rem;font-weight:700;color:var(--clr-text);margin-bottom:14px;">查證過程</h3>
+    <!-- 3.2 -->
+    <h3 id="sec-3-2" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;margin-top:40px;">
+        <span style="opacity:.5;">3.2</span> 查證過程
+    </h3>
     <div class="verify-flow reveal" style="margin-bottom:24px;">
         <div class="verify-box">
             <div class="verify-box__label" style="color:var(--clr-accent-2);">📝 AI 原始說法</div>
@@ -460,7 +594,10 @@
         </div>
     </div>
 
-    <h3 class="reveal" style="font-size:.97rem;font-weight:700;color:var(--clr-text);margin-bottom:12px;">查證資料來源</h3>
+    <!-- 3.3 -->
+    <h3 id="sec-3-3" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;margin-top:40px;">
+        <span style="opacity:.5;">3.3</span> 查證資料來源
+    </h3>
     <div class="source-cite reveal">
         <div class="source-cite__icon">📚</div>
         <div class="source-cite__text">
@@ -473,7 +610,11 @@
         </div>
     </div>
 
-    <div class="highlight-box highlight-box--teal reveal" style="margin-top:22px;">
+    <!-- 3.4 -->
+    <h3 id="sec-3-4" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;margin-top:40px;">
+        <span style="opacity:.5;">3.4</span> 查證結論
+    </h3>
+    <div class="highlight-box highlight-box--teal reveal" style="margin-top:10px;">
         <strong>查證結論與修正：</strong>AI 的核心論點（ReLU 在梯度傳遞上優於 Sigmoid）是正確且有文獻支持的。但我的理解需要<strong>補充修正</strong>：ReLU 並非完全解決了梯度消失問題，它只是在正數範圍緩解了此問題，同時引入了「神經元死亡」的新風險。這也是後來出現 Leaky ReLU、ELU 等改進版本的原因。AI 的回答有簡化的成分，需要獨立查證才能得到完整、準確的認識。
     </div>
 </div>
@@ -493,7 +634,10 @@
         <p class="section__desc">透過圖表呈現 CNN 的整體架構，以及點擊各層查看詳細說明。</p>
     </div>
 
-    <!-- Static Architecture Flow -->
+    <!-- 4.1 -->
+    <h3 id="sec-4-1" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+        <span style="opacity:.5;">4.1</span> 架構資料流向圖
+    </h3>
     <div class="viz-container reveal">
         <div class="viz-header">
             <div class="viz-dot" style="background:#f87171;"></div>
@@ -621,7 +765,9 @@
         <!-- Demo Header -->
         <div class="conv-demo-header">
             <div style="font-size:2rem;margin-bottom:6px;">🎮</div>
-            <h3>互動式卷積運算示範</h3>
+            <h3 id="sec-4-2" style="font-size:1.2rem;font-weight:700;color:var(--clr-primary);margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px;">
+                <span style="opacity:.5;">4.2</span> 互動式卷積運算示範
+            </h3>
             <p>自訂輸入矩陣與卷積核，透過逐步動畫理解卷積計算的每個步驟</p>
         </div>
 
@@ -760,7 +906,10 @@
         <h2 class="section__title">CNN 的實際應用案例</h2>
         <p class="section__desc">CNN 的影響力已遍及眾多行業，以下是幾個具代表性的應用場景。</p>
     </div>
-
+    <!-- 5.1 -->
+    <h3 id="sec-5-1" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+        <span style="opacity:.5;">5.1</span> 常見應用領域
+    </h3>
     <div class="cases-grid">
         <div class="case-card case-card--blue ripple-host reveal">
             <span class="case-card__emoji">🩺</span>
@@ -825,7 +974,11 @@
     </div>
 
     <div class="divider"></div>
-    <h3 class="reveal" style="font-size:.97rem;font-weight:700;color:var(--clr-text);margin-bottom:14px;">深入案例：CNN 在醫療影像診斷中的應用</h3>
+    <div class="divider"></div>
+    <!-- 5.2 -->
+    <h3 id="sec-5-2" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;margin-top:40px;">
+        <span style="opacity:.5;">5.2</span> 深入案例分析
+    </h3>
     <div class="card card--teal reveal">
         <p style="font-size:.9rem;color:var(--clr-text-muted);line-height:1.85;margin-bottom:14px;">
             2017 年，史丹佛大學的研究團隊在《Nature》期刊上發表了一篇重要論文，展示了一個基於 CNN 的皮膚癌診斷系統。該系統在 129,450 張皮膚病灶圖片上訓練後，接受與 21 位皮膚科醫師相同的測試，結果顯示 AI 的診斷準確率<strong style="color:#007a62;">與皮膚科醫師相當，甚至在某些分類上略勝一籌</strong>。
@@ -839,8 +992,12 @@
             <span class="tag tag--purple">皮膚癌偵測</span>
         </div>
         <div>
-            <a href="https://scitechvista.nat.gov.tw/Article/c000003/detail?ID=a077826c-f9e9-4dea-a5c5-470803c3139b" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--clr-primary);text-decoration:none;padding:8px 16px;border-radius:6px;background:rgba(58,111,244,0.1);transition:var(--transition);" onmouseover="this.style.background='rgba(58,111,244,0.2)'" onmouseout="this.style.background='rgba(58,111,244,0.1)'">
-                延伸閱讀：AI 如何辨識皮膚癌 🔗
+            <a href="https://scitechvista.nat.gov.tw/Article/c000003/detail?ID=a077826c-f9e9-4dea-a5c5-470803c3139b" target="_blank" rel="noopener noreferrer" class="neon-link">
+                <span class="neon-line neon-line-1"></span>
+                <span class="neon-line neon-line-2"></span>
+                <span class="neon-line neon-line-3"></span>
+                <span class="neon-line neon-line-4"></span>
+                <span class="neon-link__content">外部連結：相關新聞報導➤</span>
             </a>
         </div>
     </div>
@@ -861,6 +1018,10 @@
         <p class="section__desc">記錄這次以 AI 輔助學習 CNN 的完整心得，包含 AI 的幫助、限制，以及自己真正學到了什麼。</p>
     </div>
 
+    <!-- 6.1 -->
+    <h3 id="sec-6-1" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+        <span style="opacity:.5;">6.1</span> 學習歷程反思
+    </h3>
     <div class="reflection-grid">
         <div class="reflection-item reveal-left">
             <div class="reflection-item__icon">✅</div>
@@ -884,10 +1045,86 @@
         </div>
     </div>
 
+    <!-- 6.2 -->
+    <h3 id="sec-6-2" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;margin-top:40px;">
+        <span style="opacity:.5;">6.2</span> 總結與展望
+    </h3>
     <div class="reflection-summary reveal">
         <p class="reflection-summary__text">
             總結而言，這次以「AI 輔助 + 自主查證」的學習模式，讓我對 CNN 有了從淺到深的系統性理解。<strong>AI 大幅降低了入門門檻</strong>，讓我能夠在短時間內建立起整體的概念框架；而<strong>獨立查證的過程</strong>，則讓我真正掌握了細節，並發展出對資訊的批判思維。這種學習方式值得在未來持續採用，但必須始終記得：AI 是一把強大的工具，而不是不容置疑的答案。
         </p>
+    </div>
+</div>
+</section>
+
+
+
+<!-- ======================================
+     SECTION 7 — 資料來源
+======================================= -->
+<section class="section" id="sources">
+<div class="container">
+    <div class="section__header reveal">
+        <div class="section__label">
+            <span class="task-num">7</span>
+            <span class="task-name">Task 07 · 資料來源</span>
+        </div>
+        <h2 class="section__title">資料來源</h2>
+        <p class="section__desc">本報告所引用的文字、圖片及參考文獻一覽。</p>
+    </div>
+
+    <div class="card reveal" style="padding: 28px 32px;">
+        <!-- 7.1 -->
+        <h3 id="sec-7-1" style="font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--clr-text-subtle);margin-bottom:18px;">
+            <span style="opacity:.5;margin-right:6px;">7.1</span>論文與技術文件
+        </h3>
+        <ol class="sources-list">
+            <li>
+                LeCun, Y., Bottou, L., Bengio, Y., &amp; Haffner, P. (1998). <em>Gradient-based learning applied to document recognition.</em> Proceedings of the IEEE, 86(11), 2278–2324.
+            </li>
+            <li>
+                Krizhevsky, A., Sutskever, I., &amp; Hinton, G. E. (2012). <em>ImageNet classification with deep convolutional neural networks.</em> Advances in Neural Information Processing Systems, 25.
+            </li>
+            <li>
+                Esteva, A., et al. (2017). <em>Dermatologist-level classification of skin cancer with deep neural networks.</em> Nature, 542(7639), 115–118.
+            </li>
+        </ol>
+    </div>
+
+    <div class="card reveal" style="padding: 28px 32px; margin-top: 16px;">
+        <!-- 7.2 -->
+        <h3 id="sec-7-2" style="font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--clr-text-subtle);margin-bottom:18px;">
+            <span style="opacity:.5;margin-right:6px;">7.2</span>網路資源與圖片來源
+        </h3>
+        <ol class="sources-list" start="4">
+            <li>
+                楊立昆（Yann LeCun）照片 — Wikipedia. <a href="https://zh.wikipedia.org/zh-tw/%E6%9D%A8%E7%AB%8B%E6%98%86" target="_blank" rel="noopener">維基百科：楊立昆</a>。授權：CC BY 2.0。
+            </li>
+            <li>
+                LeNet-5 架構示意圖 — Medium. <a href="https://kilong31442.medium.com/%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF-cnn-%E7%9A%84%E7%B6%93%E5%85%B8%E7%B6%B2%E8%B7%AF%E6%9E%B6%E6%A7%8B-1-lenet-5-alexnet-85524c64c01d" target="_blank" rel="noopener">卷積神經網路（CNN）的經典網路架構（一）</a>。
+            </li>
+            <li>
+                AI 醫療影像辨識延伸閱讀 — 科技大觀園. <a href="https://scitechvista.nat.gov.tw/Article/c000003/detail?ID=a077826c-f9e9-4dea-a5c5-470803c3139b" target="_blank" rel="noopener">AI 如何辨識皮膚癌</a>。國科會科技大觀園。
+            </li>
+            <li>
+                CNN 運算流程圖 — Medium. <a href="https://chih-sheng-huang821.medium.com/%E5%8D%B7%E7%A9%8D%E7%A5%9E%E7%B6%93%E7%B6%B2%E8%B7%AF-convolutional-neural-network-cnn-cnn%E9%81%8B%E7%AE%97%E6%B5%81%E7%A8%8B-ecaec240a631" target="_blank" rel="noopener">卷積神經網路 (Convolutional Neural Network, CNN) 運算流程</a>。
+            </li>
+        </ol>
+    </div>
+
+    <div class="card reveal" style="padding: 28px 32px; margin-top: 16px;">
+        <!-- 7.3 -->
+        <h3 id="sec-7-3" style="font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--clr-text-subtle);margin-bottom:18px;">
+            <span style="opacity:.5;margin-right:6px;">7.3</span>AI 輔助工具
+        </h3>
+        <ol class="sources-list" start="8">
+            <li>
+                <strong>Google Gemini</strong> — 用於概念理解、架構解釋、內容草稿生成及程式碼撰寫輔助。
+            </li>
+            <li>
+                <strong>Antigravity IDE</strong>（Google DeepMind）— 用於本網頁的互動式介面開發與迭代。
+            </li>
+        </ol>
     </div>
 </div>
 </section>

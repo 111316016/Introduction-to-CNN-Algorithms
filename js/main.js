@@ -29,22 +29,73 @@ if (backToTopBtn) {
     });
 }
 
-/* ---- TOC Sidebar Toggle ---- */
+/* ---- TOC: Scroll offset fix, close button, collapse button ---- */
 const tocToggle = document.getElementById('toc-toggle');
 const tocSidebar = document.getElementById('toc-sidebar');
-if (tocToggle && tocSidebar) {
-    tocToggle.addEventListener('click', () => {
-        tocSidebar.classList.toggle('show');
-    });
-    // 點擊連結後，如果是小螢幕就自動收起目錄
-    tocSidebar.querySelectorAll('.toc-link').forEach(link => {
-        link.addEventListener('click', () => {
+const tocCloseBtn = document.getElementById('toc-close');
+
+// Helper: scroll to anchor with nav offset
+function scrollToAnchor(hash) {
+    const target = document.querySelector(hash);
+    if (!target) return;
+    const navHeight = document.getElementById('main-nav')?.offsetHeight ?? 70;
+    const targetTop = target.getBoundingClientRect().top + window.scrollY - navHeight - 16;
+    window.scrollTo({ top: targetTop, behavior: 'smooth' });
+}
+
+// Intercept all TOC links with data-scroll
+if (tocSidebar) {
+    tocSidebar.querySelectorAll('a[data-scroll]').forEach(link => {
+        link.addEventListener('click', e => {
+            e.preventDefault();
+            const hash = link.getAttribute('href');
+            scrollToAnchor(hash);
+            // Auto-close on small screens
             if (window.innerWidth <= 1450) {
                 tocSidebar.classList.remove('show');
             }
         });
     });
 }
+
+// Open / close the sidebar (toggle button)
+if (tocToggle && tocSidebar) {
+    tocToggle.addEventListener('click', () => {
+        if (window.innerWidth <= 1450) {
+            tocSidebar.classList.toggle('show');
+        } else {
+            tocSidebar.classList.remove('hide-desktop');
+            tocToggle.classList.remove('show-desktop');
+        }
+    });
+}
+
+// Close button inside sidebar
+if (tocCloseBtn && tocSidebar) {
+    tocCloseBtn.addEventListener('click', () => {
+        if (window.innerWidth <= 1450) {
+            tocSidebar.classList.remove('show');
+        } else {
+            tocSidebar.classList.add('hide-desktop');
+            tocToggle.classList.add('show-desktop');
+        }
+    });
+}
+
+// Collapse sub-list toggle (Dynamic for all tasks)
+const collapseBtns = document.querySelectorAll('.toc-collapse-btn');
+collapseBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const parentLi = btn.closest('.toc-has-sub');
+        if (!parentLi) return;
+        
+        const subList = parentLi.querySelector('.toc-sublist');
+        if (subList) {
+            const isOpen = subList.classList.toggle('toc-sublist--open');
+            btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        }
+    });
+});
 
 /* ---- 2. Section progress dots + nav highlight ---- */
 const sections = document.querySelectorAll('section[id]');
