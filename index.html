@@ -97,7 +97,7 @@
                 <div class="hero__card-divider"></div>
                 <div class="hero__card-item">
                     <div class="label">截止日期</div>
-                    <div class="value">2025/06/07</div>
+                    <div class="value">2026/06/07</div>
                 </div>
             </div>
         </div>
@@ -220,7 +220,7 @@
                 </h3>
                 <p class="lead-text reveal">
                     <strong>卷積神經網路（Convolutional Neural Network，簡稱
-                        CNN）</strong>是一種深度學習演算法，專門用來處理具有「網格狀結構」的資料，而最常見的應用對象就是影像（2D 網格）或音訊頻譜（1D 網格）。CNN
+                        CNN）</strong>是一種深度學習演算法，專門用來處理具有「網格狀結構」的資料，而最常見的應用對象就是影像（2D 網格）、聲音波形（1D 序列）或音訊頻譜（2D 時頻圖）。CNN
                     的設計靈感源自人類與動物的視覺神經系統——1950 年代神經科學家 Hubel 與 Wiesel
                     對貓的視覺皮層進行實驗，發現大腦中存在對特定方向邊緣敏感的「簡單細胞」與「複雜細胞」。不同區域的神經元只對視野中特定範圍的刺激有反應，CNN
                     的「卷積層」與「池化層」正是巧妙地模仿了這種「局部感知」與「特徵階層式整合」的生理機制。
@@ -265,7 +265,7 @@
                 </h3>
                 <p class="reveal"
                     style="font-size:.9rem;color:var(--clr-text-muted);margin-bottom:18px;line-height:1.75;">
-                    傳統神經網路在處理影像時面臨三大根本困難，CNN 針對這些問題提出了有效的解決方案：
+                    傳統神經網路在處理影像時面臨多項根本困難，CNN 針對這些問題提出了有效的解決方案：
                 </p>
                 <div class="problems-list">
                     <div class="problem-item ripple-host reveal">
@@ -288,9 +288,9 @@
                     <div class="problem-item ripple-host reveal">
                         <div class="problem-item__badge">📍</div>
                         <div>
-                            <div class="problem-item__title">位置不變性（Position Invariance）</div>
+                            <div class="problem-item__title">平移穩健性（Translation Robustness）</div>
                             <div class="problem-item__desc">傳統方法的致命弱點是：同一隻貓出現在圖片左上角或右下角，模型可能無法辨識為同一事物。CNN
-                                的卷積核以<strong>滑動掃描</strong>的方式遍歷整張影像，確保無論特徵出現在哪個位置，都能被準確捕捉。</div>
+                                的卷積核以<strong>滑動掃描</strong>的方式遍歷整張影像，使相同特徵在不同位置仍能產生相似響應，再搭配池化、資料增強等方法提升模型對位移的穩健性。</div>
                         </div>
                     </div>
                     <div class="problem-item ripple-host reveal">
@@ -306,7 +306,7 @@
                         <div>
                             <div class="problem-item__title">特徵層次結構（Hierarchical Representation）</div>
                             <div class="problem-item__desc">圖片理解需要從微觀到宏觀。CNN
-                                的多層架構能夠自然地形成「層次化」特徵：淺層學習點與線，中層將線條組合成幾何形狀（如眼睛、車輪），深層則將形狀組合成具體語義物件（如人臉、汽車），完美契合人類認知模式。
+                                的多層架構能夠自然地形成「層次化」特徵：淺層學習點與線，中層將線條組合成幾何形狀（如眼睛、車輪），深層則將形狀組合成具體語義物件（如人臉、汽車），在工程上相當符合由局部到整體的影像理解流程。
                             </div>
                         </div>
                     </div>
@@ -364,11 +364,11 @@
                             </div>
                         </div>
                         <div class="flow-step ripple-host">
-                            <div class="flow-step__num" data-tip="輸出類別概率">6</div>
+                            <div class="flow-step__num" data-tip="輸出類別機率">6</div>
                             <div class="flow-step__content">
                                 <div class="flow-step__title">輸出層（Output Layer）</div>
-                                <div class="flow-step__desc">最後一層通常使用 Softmax 函數，將各類別的原始分數轉換成概率分佈（總和為
-                                    1），例如「貓：82%、狗：15%、鳥：3%」，取概率最高的類別作為辨識結果。</div>
+                                <div class="flow-step__desc">最後一層通常使用 Softmax 函數，將各類別的原始分數轉換成機率分佈（總和為
+                                    1），例如「貓：82%、狗：15%、鳥：3%」，取機率最高的類別作為辨識結果。</div>
                             </div>
                         </div>
                     </div>
@@ -463,7 +463,7 @@
                         <div>
                             <div class="problem-item__title">步幅（Stride）</div>
                             <div class="problem-item__desc"><strong>Stride</strong> 指的是卷積核每次滑動的步長。預設值通常為 1（每次移動一格）。如果設定為
-                                2，則卷積核每次會跳過一格，這會使輸出的特徵圖長寬直接減半。Stride 常被用來取代池化層進行大幅降維。</div>
+                                2，則卷積核每次會跳過一格，在常見設定下會使輸出的特徵圖長寬約減半。Stride 常被用來取代池化層進行大幅降維。</div>
                         </div>
                     </div>
                 </div>
@@ -681,7 +681,7 @@
                     <div class="intro-card ripple-host">
                         <div class="intro-card__icon">🔄</div>
                         <div class="intro-card__title">Data Augmentation（資料增強）</div>
-                        <div class="intro-card__text">對原始影像施加線性變換（旋轉、平移、翻轉、裁剪）擴充訓練集，讓同一素材產生多種視角，大幅增強泛化能力。</div>
+                        <div class="intro-card__text">對原始影像施加幾何或色彩變換（旋轉、平移、翻轉、裁剪）擴充訓練集，讓同一素材產生多種視角，大幅增強泛化能力。</div>
                         <div
                             style="margin-top:12px;padding:8px 12px;background:var(--clr-surface-2);border-radius:var(--radius-sm);font-size:.78rem;color:var(--clr-text-subtle);font-weight:600;">
                             進階技術：Mixup、CutMix 可混合多張圖片</div>
@@ -699,7 +699,7 @@
                         <div class="intro-card__icon">🚀</div>
                         <div class="intro-card__title">Transfer Learning（遷移學習）</div>
                         <div class="intro-card__text">利用在大規模資料集（如
-                            ImageNet）預先訓練好的模型權重，再針對目標任務進行微調（Fine-tuning）。對小資料集專案尤其第一選擇，大幅節省算力。</div>
+                            ImageNet）預先訓練好的模型權重，再針對目標任務進行微調（Fine-tuning）。對小資料集專案常是優先選項，可大幅節省算力。</div>
                         <div
                             style="margin-top:12px;padding:8px 12px;background:var(--clr-surface-2);border-radius:var(--radius-sm);font-size:.78rem;color:var(--clr-text-subtle);font-weight:600;">
                             典型流程：凍結卷積層 → 只訓練分類頭 → 逐步解凍</div>
@@ -743,8 +743,7 @@
                             <div class="flow-step__num" data-tip="選擇基礎架構">1</div>
                             <div class="flow-step__content">
                                 <div class="flow-step__title">選擇預訓練模型</div>
-                                <div class="flow-step__desc">依任務類型選擇合適的預訓練架構，如影像分類選 ResNet / EfficientNet，視覺語言任務選
-                                    ViT，物件偵測選 YOLO / Faster R-CNN。</div>
+                                <div class="flow-step__desc">依任務類型選擇合適的預訓練架構，如影像分類選 ResNet / EfficientNet 或 ViT，視覺語言任務常搭配 CLIP 類模型，物件偵測選 YOLO / Faster R-CNN。</div>
                             </div>
                         </div>
                         <div class="flow-step ripple-host">
@@ -830,12 +829,29 @@
                     本次學習從最基礎的 AI 概念出發，逐步深入到 CNN 的底層數學、程式實作與前沿研究，共提出 21 個由淺到深的系統性問題。每個問題都建立在上一個問題的理解之上，形成一條完整的學習路徑。
                 </p>
                 <div class="reveal" style="margin-bottom: 24px; display: flex; gap: 12px; flex-wrap: wrap;">
-                    <a href="https://gemini.google.com/share/21f365b24155" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 8px; background: var(--clr-primary); color: white; padding: 10px 20px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-decoration: none; box-shadow: var(--shadow-sm); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                    <a href="https://gemini.google.com/share/21f365b24155" target="_blank" rel="noopener noreferrer"
+                        style="display: inline-flex; align-items: center; gap: 8px; background: var(--clr-primary); color: white; padding: 10px 20px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-decoration: none; box-shadow: var(--shadow-sm); transition: transform 0.2s, box-shadow 0.2s;"
+                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-md)'"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
                         查看 Gemini 完整對話紀錄
                     </a>
-                    <a href="assets/record/AI、機器學習、深度學習入門---Google-Gemini.md" download="AI_Learning_Record_Gemini.md" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 8px; background: var(--clr-surface-2); color: var(--clr-text); border: 1px solid var(--clr-border-strong); padding: 10px 20px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-decoration: none; box-shadow: var(--shadow-sm); transition: transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-md)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    <a href="assets/record/AI、機器學習、深度學習入門---Google-Gemini.md" download="AI_Learning_Record_Gemini.md"
+                        target="_blank" rel="noopener noreferrer"
+                        style="display: inline-flex; align-items: center; gap: 8px; background: var(--clr-surface-2); color: var(--clr-text); border: 1px solid var(--clr-border-strong); padding: 10px 20px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-decoration: none; box-shadow: var(--shadow-sm); transition: transform 0.2s, box-shadow 0.2s;"
+                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='var(--shadow-md)'"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='var(--shadow-sm)'">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
                         下載 Markdown 紀錄檔
                     </a>
                 </div>
@@ -853,77 +869,92 @@
                             <tr>
                                 <td>1</td>
                                 <td>AI、機器學習、深度學習的定義與三者關係？</td>
-                                <td>用「俄羅斯套娃」比喻：<strong>AI ⊃ ML ⊃ DL</strong>。AI 是讓機器看起來聰明的總稱；ML 是<strong>從資料找規律</strong>；DL 是用<strong>類神經網路模仿大腦</strong>的進階技術。</td>
+                                <td>用「俄羅斯套娃」比喻：<strong>AI ⊃ ML ⊃ DL</strong>。AI 是讓機器看起來聰明的總稱；ML
+                                    是<strong>從資料找規律</strong>；DL 是用<strong>類神經網路模仿大腦</strong>的進階技術。</td>
                                 <td>建立了整個 AI 領域的宏觀框架，不再混淆三個詞彙。</td>
                             </tr>
                             <tr>
                                 <td>2</td>
                                 <td>監督式、非監督式、強化學習的定義、訓練方式與優缺點？</td>
-                                <td>監督式像<strong>「附有答案的練習題」</strong>；非監督式像<strong>「盲人摸象自行分類」</strong>；強化學習像<strong>「訓練寵物」</strong>。並附詳細優缺點對比表格。</td>
+                                <td>監督式像<strong>「附有答案的練習題」</strong>；非監督式像<strong>「盲人摸象自行分類」</strong>；強化學習像<strong>「訓練寵物」</strong>。並附詳細優缺點對比表格。
+                                </td>
                                 <td>理解不同問題類型需要不同的學習方法，不是所有 AI 都靠「答案」訓練。</td>
                             </tr>
                             <tr>
                                 <td>3</td>
                                 <td>什麼是神經網路？請從大腦神經元解釋並示範計算流程。</td>
-                                <td>拆解神經元、<strong>權重、偏差、激活函數</strong>。以自駕車煞車為例：<strong>x₁×w₁ + x₂×w₂ + b = 4 > 0</strong>，觸發煞車決策。</td>
+                                <td>拆解神經元、<strong>權重、偏差、激活函數</strong>。以自駕車煞車為例：<strong>x₁×w₁ + x₂×w₂ + b = 4 >
+                                        0</strong>，觸發煞車決策。</td>
                                 <td>從數字角度理解神經元運作，不再只是抽象概念。</td>
                             </tr>
                             <tr>
                                 <td>4</td>
                                 <td>CNN 出現前，傳統神經網路（ANN）如何處理圖片？有何缺點？</td>
-                                <td>ANN 必須<strong>「壓扁拉平」</strong>圖片，導致三大災難：<strong>空間記憶喪失</strong>、<strong>無法辨識移位物體</strong>、100×100 圖片產生 <strong>1000 萬個參數</strong>。</td>
+                                <td>ANN
+                                    必須<strong>「壓扁拉平」</strong>圖片，導致三大災難：<strong>空間記憶喪失</strong>、<strong>無法辨識移位物體</strong>、100×100
+                                    圖片產生 <strong>1000 萬個參數</strong>。</td>
                                 <td>從失敗的嘗試理解 CNN 的存在意義，讓 CNN 的每個設計都變得有意義。</td>
                             </tr>
                             <tr>
                                 <td>5</td>
                                 <td>CNN 是誰提出的？如何解決 ANN 的問題？</td>
-                                <td>1950s Hubel & Wiesel 發現貓咪視覺皮層<strong>局部感知機制</strong>；1998 年楊立昆（Yann LeCun）發表 <strong>LeNet-5</strong>，首度用 CNN
+                                <td>1950s Hubel & Wiesel 發現貓咪視覺皮層<strong>局部感知機制</strong>；1998 年楊立昆（Yann LeCun）發表
+                                    <strong>LeNet-5</strong>，首度用 CNN
                                     辨識手寫郵遞區號。</td>
                                 <td>理解 CNN 的誕生有歷史背景，科學進步是站在前人肩膀上的。</td>
                             </tr>
                             <tr>
                                 <td>6</td>
                                 <td>CNN 整體架構：Input → Conv → ReLU → Pooling → FC → Output 的完整流程？</td>
-                                <td>用<strong>「流水線」</strong>比喻：輸入層（報案中心）→ <strong>卷積層（前線調查員）</strong>→ <strong>ReLU（嚴格審核員）</strong>→ <strong>池化層（總結秘書）</strong>→ <strong>全連接層（綜合研判室）</strong>→ 輸出層（蓋章判決）。</td>
+                                <td>用<strong>「流水線」</strong>比喻：輸入層（報案中心）→ <strong>卷積層（前線調查員）</strong>→
+                                    <strong>ReLU（嚴格審核員）</strong>→ <strong>池化層（總結秘書）</strong>→
+                                    <strong>全連接層（綜合研判室）</strong>→ 輸出層（蓋章判決）。</td>
                                 <td>建立了各層功能的直觀印象，能說出每層「做什麼、為什麼這樣做」。</td>
                             </tr>
                             <tr>
                                 <td>7</td>
                                 <td>卷積運算（Kernel、Feature Map、Stride、Padding）的數學詳解？</td>
-                                <td>以 5×5 影像與 3×3 垂直邊緣偵測 Kernel <strong>親手計算</strong>，輸出 3×3 的 Feature Map，驗證 <strong>O = ⌊(N-K+2P)/S⌋ + 1</strong> 的公式。
+                                <td>以 5×5 影像與 3×3 垂直邊緣偵測 Kernel <strong>親手計算</strong>，輸出 3×3 的 Feature Map，驗證 <strong>O
+                                        = ⌊(N-K+2P)/S⌋ + 1</strong> 的公式。
                                 </td>
                                 <td>能親手算出卷積結果，不再對「Feature Map」感到陌生。</td>
                             </tr>
                             <tr>
                                 <td>8</td>
                                 <td>Max Pooling vs Average Pooling 的差異與矩陣計算示範？</td>
-                                <td>以 4×4 矩陣示範：<strong>Max Pooling 取最大值</strong>（保留最強特徵訊號）；<strong>Average Pooling 取平均值</strong>（保留整體感）。Pooling 讓資料量縮減
-                                    <strong>75%</strong>。</td>
+                                <td>以 4×4 矩陣示範：<strong>Max Pooling 取最大值</strong>（保留最強特徵訊號）；<strong>Average Pooling
+                                        取平均值</strong>（保留整體感）。Pooling 讓資料量縮減
+                                    <strong>75%</strong>。
+                                </td>
                                 <td>理解池化不只是「縮圖」，而是提取最強特徵訊號的關鍵機制。</td>
                             </tr>
                             <tr>
                                 <td>9</td>
                                 <td>Sigmoid、Tanh、ReLU、Leaky ReLU、Softmax 的公式與適用場景比較？</td>
-                                <td><strong>ReLU</strong>（f=max(0,x)）計算最快、為 CNN 隱藏層霸主；<strong>Leaky ReLU</strong> 用 0.01x 解決神經元死亡問題；<strong>Softmax</strong> 專用於多分類輸出層。
+                                <td><strong>ReLU</strong>（f=max(0,x)）計算最快、為 CNN 隱藏層霸主；<strong>Leaky ReLU</strong> 用
+                                    0.01x 解決神經元死亡問題；<strong>Softmax</strong> 專用於多分類輸出層。
                                 </td>
                                 <td>理解激活函數的選擇是工程權衡，每種函數都有其適用場景。</td>
                             </tr>
                             <tr>
                                 <td>10</td>
                                 <td>CNN 如何學習？Forward Propagation、Loss Function、Backpropagation 的運作原理？</td>
-                                <td><strong>前向傳播</strong>（寫考卷）→ <strong>Loss 計算誤差</strong>（老師改分）→ <strong>反向傳播</strong>利用鏈式法則找戰犯 → <strong>梯度下降</strong>更新參數。如此循環數萬次，CNN 從亂猜變精準。</td>
+                                <td><strong>前向傳播</strong>（寫考卷）→ <strong>Loss 計算誤差</strong>（老師改分）→
+                                    <strong>反向傳播</strong>利用鏈式法則找戰犯 → <strong>梯度下降</strong>更新參數。如此循環數萬次，CNN 從亂猜變精準。</td>
                                 <td>CNN 的學習是可被數學描述的迭代過程，而非不可解釋的「魔法」。</td>
                             </tr>
                             <tr>
                                 <td>11</td>
                                 <td>MSE 與 Cross Entropy 的差異？何時使用哪種 Loss Function？</td>
-                                <td><strong>MSE</strong> 適合<strong>連續值預測</strong>（房價）；<strong>Cross Entropy</strong> 用對數尺度計算分類誤差，對「差很多」的錯誤給予更重的懲罰，更適合<strong>分類任務</strong>。</td>
+                                <td><strong>MSE</strong> 適合<strong>連續值預測</strong>（房價）；<strong>Cross Entropy</strong>
+                                    用對數尺度計算分類誤差，對「差很多」的錯誤給予更重的懲罰，更適合<strong>分類任務</strong>。</td>
                                 <td>明白 Loss Function 的選擇直接影響模型訓練方向，不能混用。</td>
                             </tr>
                             <tr>
                                 <td>12</td>
                                 <td>Batch Size 與 Learning Rate 是什麼？如何調整超參數？</td>
-                                <td><strong>Learning Rate</strong> 是「下山的步伐大小」，步伐太大會走過頭，太小會卡住。通常從 0.001 開始搭配 <strong>Adam 優化器</strong>（自動調整步伐）；<strong>Batch Size</strong>
+                                <td><strong>Learning Rate</strong> 是「下山的步伐大小」，步伐太大會走過頭，太小會卡住。通常從 0.001 開始搭配 <strong>Adam
+                                        優化器</strong>（自動調整步伐）；<strong>Batch Size</strong>
                                     影響訓練穩定性。</td>
                                 <td>理解超參數調整是深度學習的核心藝術，需要反覆實驗。</td>
                             </tr>
@@ -931,7 +962,8 @@
                                 <td>13</td>
                                 <td>CNN 發展史：LeNet → AlexNet → VGG → GoogLeNet → ResNet → DenseNet → EfficientNet？</td>
                                 <td><strong>LeNet</strong>（1998）確立基礎；<strong>AlexNet</strong>（2012）用 GPU+ReLU
-                                    引爆革命；<strong>ResNet</strong>（2015）提出殘差連接突破深度限制；<strong>EfficientNet</strong>（2019）用 AI 找出黃金比例。</td>
+                                    引爆革命；<strong>ResNet</strong>（2015）提出殘差連接突破深度限制；<strong>EfficientNet</strong>（2019）用
+                                    複合縮放（Compound Scaling）平衡網路深度、寬度與解析度。</td>
                                 <td>理解每個架構創新都是在解決前一代的具體缺陷，技術演進有其內在邏輯。</td>
                             </tr>
                             <tr>
@@ -944,49 +976,57 @@
                             <tr>
                                 <td>15</td>
                                 <td>YOLO、R-CNN、Fast R-CNN、Faster R-CNN、Mask R-CNN 的差異比較？</td>
-                                <td><strong>R-CNN 家族</strong>兩階段追求準確；<strong>YOLO</strong> 單階段追求速度（可達百 FPS）。<strong>Faster R-CNN</strong> 用 RPN 完全端到端化；<strong>Mask R-CNN</strong>
+                                <td><strong>R-CNN 家族</strong>兩階段追求準確；<strong>YOLO</strong> 單階段追求速度（可達百
+                                    FPS）。<strong>Faster R-CNN</strong> 用 RPN 完全端到端化；<strong>Mask R-CNN</strong>
                                     實現像素級「實例分割」。</td>
                                 <td>理解物件偵測中速度與精度的核心取捨，以及不同場景的最佳工具選擇。</td>
                             </tr>
                             <tr>
                                 <td>16</td>
                                 <td>用 TensorFlow/Keras 建立 MNIST 手寫數字辨識 CNN 的完整程式碼？</td>
-                                <td>提供完整可執行程式：資料正規化 ÷255 → <strong>Conv2D+MaxPool</strong> 兩組 → <strong>Flatten+Dense+Softmax</strong> → <strong>Adam 優化器</strong> → 5
+                                <td>提供完整可執行程式：資料正規化 ÷255 → <strong>Conv2D+MaxPool</strong> 兩組 →
+                                    <strong>Flatten+Dense+Softmax</strong> → <strong>Adam 優化器</strong> → 5
                                     Epochs 訓練，最終測試集準確率 <strong>99.12%</strong>。</td>
                                 <td>從「看懂理論」跨越到「寫出程式」，是本次學習最大的突破。</td>
                             </tr>
                             <tr>
                                 <td>17</td>
                                 <td>TensorFlow 與 PyTorch 的差異？用 PyTorch 重新實作 MNIST CNN？</td>
-                                <td><strong>TF/Keras</strong> 是「宣告式框架」一行 .fit()；<strong>PyTorch</strong> 需手動寫 zero_grad → forward → loss → backward → step
+                                <td><strong>TF/Keras</strong> 是「宣告式框架」一行 .fit()；<strong>PyTorch</strong> 需手動寫 zero_grad
+                                    → forward → loss → backward → step
                                     的訓練迴圈，除錯更直觀，學術界主流。</td>
                                 <td>理解兩種框架的設計哲學，能根據需求（工業部署 vs 研究實驗）選擇工具。</td>
                             </tr>
                             <tr>
                                 <td>18</td>
                                 <td>如何使用自己的圖片資料集訓練 CNN（資料蒐集到部署的完整流程）？</td>
-                                <td>6 步驟：拍攝 100-500 張 → <strong>LabelImg</strong> 標註 → 旋轉翻轉<strong>資料增強</strong> → <strong>遷移學習</strong>（使用預訓練 ResNet 微調）→
+                                <td>6 步驟：拍攝 100-500 張 → <strong>LabelImg</strong> 標註 → 旋轉翻轉<strong>資料增強</strong> →
+                                    <strong>遷移學習</strong>（使用預訓練 ResNet 微調）→
                                     混淆矩陣評估 → <strong>TFLite</strong> 邊緣部署。</td>
                                 <td>具備了從零到部署的完整 AI 工程思維，能設計真實的 AI 應用專案。</td>
                             </tr>
                             <tr>
                                 <td>19</td>
                                 <td>CNN 與 Transformer 的架構差異？Vision Transformer（ViT）的原理？</td>
-                                <td><strong>CNN</strong> 是「局部到全局的偵探」；<strong>ViT</strong> 把圖片切成 16×16 Patch 當作「單字」，加位置編碼後送入
-                                    <strong>Self-Attention</strong>，讓所有方塊同時開「圓桌會議」交流。</td>
+                                <td><strong>CNN</strong> 是「局部到全局的偵探」；<strong>ViT</strong> 把圖片切成 16×16 Patch
+                                    當作「單字」，加位置編碼後送入
+                                    <strong>Self-Attention</strong>，讓所有方塊同時開「圓桌會議」交流。
+                                </td>
                                 <td>理解了 AI 視覺領域的典範轉移，CNN 並非唯一解答。</td>
                             </tr>
                             <tr>
                                 <td>20</td>
                                 <td>CNN 最新發展：Swin Transformer、ConvNeXt、YOLOv11、多模態模型？</td>
-                                <td><strong>Swin Transformer</strong> 用「移動視窗」解決計算量問題；<strong>ConvNeXt</strong> 是 Meta 把 Transformer 技巧移植到 ResNet 的「CNN
+                                <td><strong>Swin Transformer</strong> 用「移動視窗」解決計算量問題；<strong>ConvNeXt</strong> 是 Meta 把
+                                    Transformer 技巧移植到 ResNet 的「CNN
                                     絕地大反擊」；<strong>多模態模型</strong>同時擁有視覺與語言能力。</td>
                                 <td>看到 AI 視覺領域的前沿：CNN 仍在進化，而非被淘汰。</td>
                             </tr>
                             <tr>
                                 <td>21</td>
                                 <td>CNN 未來展望：會被 Transformer 完全取代嗎？</td>
-                                <td><strong>不會完全取代</strong>，而是<strong>「共存演化」</strong>。CNN 在邊緣計算、即時推論等算力有限的場景仍不可替代；Transformer 在海量資料的大型視覺模型中佔優。未來趨勢是<strong>互相融合</strong>。
+                                <td><strong>不會完全取代</strong>，而是<strong>「共存演化」</strong>。CNN
+                                    在邊緣計算、即時推論等算力有限的場景仍很有競爭力；Transformer 在海量資料的大型視覺模型中佔優。未來趨勢是<strong>互相融合</strong>。
                                 </td>
                                 <td>培養了對技術演進的批判性思考，能看到「非此即彼」以外的可能性。</td>
                             </tr>
@@ -1124,9 +1164,9 @@
                             <div class="dialogue__avatar avatar--ai">AI</div>
                             <div class="dialogue__bubble bubble--ai">
                                 不會完全取代，而是「共存演化」。Transformer 需要<strong>海量資料和超強算力</strong>才能展現優勢；CNN
-                                在算力有限的場景（手機、無人機、工廠）仍是不可替代的選擇。<br><br>
+                                在算力有限的場景（手機、無人機、工廠）仍是很有競爭力的選擇。<br><br>
                                 最有趣的是：Meta 的研究者把 Transformer 的優點「移植」到 CNN，做出了 <strong>ConvNeXt</strong>，讓純 CNN
-                                架構在準確度上重新超越 Transformer。未來不是「誰取代誰」，而是<strong>兩者互相學習、融合</strong>的趨勢。
+                                架構在多項影像分類基準上重新具備與 Transformer 競爭的表現。未來不是「誰取代誰」，而是<strong>兩者互相學習、融合</strong>的趨勢。
                             </div>
                         </div>
                     </div>
@@ -1138,8 +1178,11 @@
 
                 <!-- 截圖展示 -->
                 <div class="reveal" style="margin-top: 40px; margin-bottom: 20px; text-align: center;">
-                    <div style="font-size: 1rem; font-weight: 600; color: var(--clr-text); display: inline-flex; align-items: center; gap: 8px;">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--clr-primary);">
+                    <div
+                        style="font-size: 1rem; font-weight: 600; color: var(--clr-text); display: inline-flex; align-items: center; gap: 8px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                            style="color: var(--clr-primary);">
                             <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
                             <circle cx="8.5" cy="8.5" r="1.5"></circle>
                             <polyline points="21 15 16 10 5 21"></polyline>
@@ -1150,18 +1193,18 @@
                         以下為使用 Google Gemini 進行輔助學習之實際對話畫面
                     </div>
                 </div>
-                <div class="intro-grid reveal">
-                    <div class="intro-card ripple-host reveal-left" style="padding: 12px;">
-                        <img src="assets/record/01.png" alt="對話截圖 1" style="width: 100%; border-radius: 6px; aspect-ratio: 16/9; object-fit: cover; display: block;">
+                <div class="gallery-grid reveal">
+                    <div class="gallery-card ripple-host reveal-left">
+                        <img class="gallery-img" src="assets/record/01.png" alt="對話截圖 1">
                     </div>
-                    <div class="intro-card ripple-host reveal-right" style="padding: 12px;">
-                        <img src="assets/record/02.png" alt="對話截圖 2" style="width: 100%; border-radius: 6px; aspect-ratio: 16/9; object-fit: cover; display: block;">
+                    <div class="gallery-card ripple-host reveal-right">
+                        <img class="gallery-img" src="assets/record/02.png" alt="對話截圖 2">
                     </div>
-                    <div class="intro-card ripple-host reveal-left" style="padding: 12px;">
-                        <img src="assets/record/03.png" alt="對話截圖 3" style="width: 100%; border-radius: 6px; aspect-ratio: 16/9; object-fit: cover; display: block;">
+                    <div class="gallery-card ripple-host reveal-left">
+                        <img class="gallery-img" src="assets/record/03.png" alt="對話截圖 3">
                     </div>
-                    <div class="intro-card ripple-host reveal-right" style="padding: 12px;">
-                        <img src="assets/record/04.png" alt="對話截圖 4" style="width: 100%; border-radius: 6px; aspect-ratio: 16/9; object-fit: cover; display: block;">
+                    <div class="gallery-card ripple-host reveal-right">
+                        <img class="gallery-img" src="assets/record/04.png" alt="對話截圖 4">
                     </div>
                 </div>
 
@@ -1182,7 +1225,9 @@
                     <div class="intro-card">
                         <div class="intro-card__icon">⚠️</div>
                         <div class="intro-card__title">AI 的限制</div>
-                        <div class="intro-card__text">AI 有時會<strong>為了好懂而過度簡化學術理論</strong>。例如在解釋 Pooling 層時，AI 斷言它能賦予模型「平移不變性」，但實際上學術界發現這說法有破綻，Pooling 的降採樣有時反而會破壞不變性。AI 的回答適合建立直覺，但嚴謹的學術論點仍需自行查閱原始論文確認。</div>
+                        <div class="intro-card__text">AI 有時會<strong>為了好懂而過度簡化學術理論</strong>。例如在解釋 Pooling 層時，AI
+                            斷言它能賦予模型「平移不變性」，但實際上學術界發現這說法有破綻，Pooling 的降採樣有時反而會破壞不變性。AI 的回答適合建立直覺，但嚴謹的學術論點仍需自行查閱原始論文確認。
+                        </div>
                     </div>
                     <div class="intro-card">
                         <div class="intro-card__icon">🎓</div>
@@ -1225,8 +1270,11 @@
                 </h3>
                 <div class="card card--purple reveal" style="margin-bottom:24px;">
                     <div style="margin-bottom:10px;"><span class="tag--purple">查證主題</span></div>
-                    <h3 style="font-size:1rem;font-weight:700;color:var(--clr-text);margin-bottom:8px;">「Pooling 層真的能賦予 CNN 完美的『平移不變性』嗎？」</h3>
-                    <p style="font-size:.87rem;color:var(--clr-text-muted);line-height:1.75;">AI 在對話 (Turn 8) 中提到，Max Pooling 透過抓取 2×2 區域內的最大值，可以讓 AI 「不會因為物體稍微平移或變形就認不出來」。這聽起來很直觀，但在嚴謹的學術研究中，這說法其實是一種過度簡化，甚至有被推翻的疑慮。</p>
+                    <h3 style="font-size:1rem;font-weight:700;color:var(--clr-text);margin-bottom:8px;">「Pooling 層真的能賦予
+                        CNN 完美的『平移不變性』嗎？」</h3>
+                    <p style="font-size:.87rem;color:var(--clr-text-muted);line-height:1.75;">AI 在對話 (Turn 8) 中提到，Max
+                        Pooling 透過抓取 2×2 區域內的最大值，可以讓 AI 「不會因為物體稍微平移或變形就認不出來」。這聽起來很直觀，但在嚴謹的學術研究中，這說法其實是一種過度簡化，甚至有被推翻的疑慮。
+                    </p>
                 </div>
 
                 <!-- 3.2 -->
@@ -1237,12 +1285,16 @@
                 <div class="verify-flow reveal" style="margin-bottom:24px;">
                     <div class="verify-box">
                         <div class="verify-box__label" style="color:var(--clr-accent-2);">📝 AI 原始說法</div>
-                        <div class="verify-box__content">只要特徵（如貓耳朵）稍微偏移，只要它還在 Pooling 的 2×2 框框內，抓出來的最大值依然是同一個數字！這賦予了 AI 平移不變性（Translation Invariance）。</div>
+                        <div class="verify-box__content">只要特徵（如貓耳朵）稍微偏移，只要它還在 Pooling 的 2×2 框框內，抓出來的最大值依然是同一個數字！這賦予了 AI
+                            平移不變性（Translation Invariance）。</div>
                     </div>
                     <div class="verify-arrow">→</div>
                     <div class="verify-box">
                         <div class="verify-box__label" style="color:var(--clr-accent);">✅ 查證後的完整說法</div>
-                        <div class="verify-box__content">AI 的說法<strong>過度簡化且有學術盲點</strong>。傳統教科書確實認為 Pooling 能帶來不變性，但它只能提供非常微小的「局部」不變性。<br><br>更致命的是，近代研究指出，帶有 Stride 的 Pooling（降採樣）實際上會引發<strong>「混疊現象 (Aliasing)」</strong>，反而會<strong>破壞</strong>神經網路的平移不變性。真正讓現代 CNN 具備強大平移不變性的原因，更多是來自於 Global Average Pooling 與大量的 Data Augmentation（資料增強）。</div>
+                        <div class="verify-box__content">AI 的說法<strong>過度簡化且有學術盲點</strong>。傳統教科書確實認為 Pooling
+                            能帶來不變性，但它只能提供非常微小的「局部」不變性。<br><br>更致命的是，近代研究指出，帶有 Stride 的 Pooling（降採樣）實際上會引發<strong>「混疊現象
+                                (Aliasing)」</strong>，反而會<strong>破壞</strong>神經網路的平移不變性。現代 CNN 的平移穩健性通常來自
+                            卷積本身的平移等變性、Global Average Pooling 與大量的 Data Augmentation（資料增強）等多種機制共同作用。</div>
                     </div>
                 </div>
 
@@ -1254,9 +1306,11 @@
                 <div class="source-cite reveal">
                     <div class="source-cite__icon">📚</div>
                     <div class="source-cite__text">
-                        <strong>來源 1：</strong>Zhang, R. (2019). <em>Making Convolutional Networks Shift-Invariant Again</em>. International Conference on Machine Learning (ICML).<br>
+                        <strong>來源 1：</strong>Zhang, R. (2019). <em>Making Convolutional Networks Shift-Invariant
+                            Again</em>. International Conference on Machine Learning (ICML).<br>
                         論文明確指出，傳統 CNN 中的下採樣（如 Max Pooling）會破壞平移不變性，並提出使用抗混疊濾波器（Anti-aliasing filter）來修正此問題。<br><br>
-                        <strong>來源 2：</strong>Goodfellow, I., Bengio, Y., & Courville, A. (2016). <em>Deep Learning</em>. MIT Press.<br>
+                        <strong>來源 2：</strong>Goodfellow, I., Bengio, Y., & Courville, A. (2016). <em>Deep
+                            Learning</em>. MIT Press.<br>
                         書中提到 Pooling 僅對「微小平移」具備不變性，對於較大的平移，模型仍需依賴其他機制（如卷積層本身的權重共享）。
                     </div>
                 </div>
@@ -1267,9 +1321,9 @@
                     <span style="opacity:.5;">3.4</span> 查證結論
                 </h3>
                 <div class="highlight-box highlight-box--teal reveal" style="margin-top:10px;">
-                    <strong>查證結論與修正：</strong>AI 的核心論點（ReLU 在梯度傳遞上優於 Sigmoid）是正確且有文獻支持的。但我的理解需要<strong>補充修正</strong>：ReLU
-                    並非完全解決了梯度消失問題，它只是在正數範圍緩解了此問題，同時引入了「神經元死亡」的新風險。這也是後來出現 Leaky ReLU、ELU 等改進版本的原因。AI
-                    的回答有簡化的成分，需要獨立查證才能得到完整、準確的認識。
+                    <strong>查證結論與修正：</strong>AI 為了便於初學者理解，常會使用「Pooling
+                    能帶來完美平移不變性」這種傳統但過度簡化的說法。透過文獻查證，我了解到有步幅的降採樣反而會引發混疊現象（Aliasing），導致平移不變性的喪失。這提醒我，AI
+                    的生動比喻非常適合用來建立直覺，但若要深入研究底層機制，仍必須回到嚴謹的學術論文中尋求真相。
                 </div>
             </div>
         </section>
@@ -1628,54 +1682,66 @@
                     style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
                     <span style="opacity:.5;">5.1</span> 常見應用領域
                 </h3>
-                <div class="intro-grid reveal">
-                    <div class="intro-card ripple-host">
-                        <div class="intro-card__icon">🩺</div>
-                        <div class="intro-card__title">醫療影像診斷</div>
-                        <div class="intro-card__text">CNN 可分析 X 光片、MRI 與 CT 掃描影像，協助醫師偵測早期腫瘤、視網膜病變、肺炎等疾病。Google DeepMind
-                            的 AI 系統在黃斑部病變偵測上已達到眼科醫師的準確率水準。</div>
-                        <img src="assets/CASE_05.png" alt="醫療影像診斷" loading="lazy"
-                            style="margin-top:16px;width:100%;border-radius:6px;aspect-ratio:16/9;object-fit:cover;">
+                <div class="cases-grid reveal">
+                    <div class="case-card case-card--blue ripple-host">
+                        <div class="case-card__content">
+                            <div class="case-card__emoji">🩺</div>
+                            <div class="case-card__title">醫療影像診斷</div>
+                            <div class="case-card__desc">CNN 可分析 X 光片、MRI 與 CT 掃描影像，協助醫師偵測早期腫瘤、視網膜病變、肺炎等疾病。Google DeepMind 的 AI 系統在黃斑部病變偵測上已達到眼科醫師的準確率水準。</div>
+                        </div>
+                        <div class="case-card__img-wrap">
+                            <img class="case-card__img" src="assets/CASE_05.png" alt="醫療影像診斷" loading="lazy">
+                        </div>
                     </div>
-                    <div class="intro-card ripple-host">
-                        <div class="intro-card__icon">🚗</div>
-                        <div class="intro-card__title">自動駕駛視覺感知</div>
-                        <div class="intro-card__text">自動駕駛車輛搭載多個攝影機，利用 CNN 即時辨識路上的行人、車輛、交通號誌、車道線等，是安全行駛的視覺基礎。Tesla
-                            Autopilot 正是以 CNN 為核心的視覺處理架構。</div>
-                        <img src="assets/CASE_06.jpg" alt="自動駕駛" loading="lazy"
-                            style="margin-top:16px;width:100%;border-radius:6px;aspect-ratio:16/9;object-fit:cover;">
+                    <div class="case-card case-card--blue ripple-host">
+                        <div class="case-card__content">
+                            <div class="case-card__emoji">🚗</div>
+                            <div class="case-card__title">自動駕駛視覺感知</div>
+                            <div class="case-card__desc">自動駕駛車輛搭載多個攝影機，利用深度神經網路即時辨識路上的行人、車輛、交通號誌、車道線等，是安全行駛的視覺基礎；CNN 曾是這類視覺感知系統的重要核心架構之一。</div>
+                        </div>
+                        <div class="case-card__img-wrap">
+                            <img class="case-card__img" src="assets/CASE_06.jpg" alt="自動駕駛" loading="lazy">
+                        </div>
                     </div>
-                    <div class="intro-card ripple-host">
-                        <div class="intro-card__icon">🔒</div>
-                        <div class="intro-card__title">人臉辨識與生物識別</div>
-                        <div class="intro-card__text">CNN
-                            能從人臉影像中提取數百個微小特徵點，即使在不同角度、光線或部分遮擋的條件下也能準確辨識，應用於手機解鎖、機場安檢、金融支付驗證等高安全性場景。</div>
-                        <img src="assets/CASE_07.jpg" alt="人臉辨識" loading="lazy"
-                            style="margin-top:16px;width:100%;border-radius:6px;aspect-ratio:16/9;object-fit:cover;">
+                    <div class="case-card case-card--blue ripple-host">
+                        <div class="case-card__content">
+                            <div class="case-card__emoji">🔒</div>
+                            <div class="case-card__title">人臉辨識與生物識別</div>
+                            <div class="case-card__desc">CNN 能從人臉影像中學習高維度的臉部特徵表示，在不同角度、光線或部分遮擋的條件下仍可提升辨識穩健性，應用於手機解鎖、機場安檢、金融支付驗證等高安全性場景。</div>
+                        </div>
+                        <div class="case-card__img-wrap">
+                            <img class="case-card__img" src="assets/CASE_07.jpg" alt="人臉辨識" loading="lazy">
+                        </div>
                     </div>
-                    <div class="intro-card ripple-host">
-                        <div class="intro-card__icon">🏭</div>
-                        <div class="intro-card__title">工業品質檢測</div>
-                        <div class="intro-card__text">在製造業中，CNN
-                            被用來自動檢查產品表面是否存在瑕疵，例如晶片電路的缺陷、布料的織紋不均勻等。相比人工目視，速度更快且不會因疲勞而降低準確率。</div>
-                        <img src="assets/CASE_08.webp" alt="工業品質檢測" loading="lazy"
-                            style="margin-top:16px;width:100%;border-radius:6px;aspect-ratio:16/9;object-fit:cover;">
+                    <div class="case-card case-card--blue ripple-host">
+                        <div class="case-card__content">
+                            <div class="case-card__emoji">🏭</div>
+                            <div class="case-card__title">工業品質檢測</div>
+                            <div class="case-card__desc">在製造業中，CNN 被用來自動檢查產品表面是否存在瑕疵，例如晶片電路的缺陷、布料的織紋不均勻等。相比人工目視，速度更快且不會因疲勞而降低準確率。</div>
+                        </div>
+                        <div class="case-card__img-wrap">
+                            <img class="case-card__img" src="assets/CASE_08.webp" alt="工業品質檢測" loading="lazy">
+                        </div>
                     </div>
-                    <div class="intro-card ripple-host">
-                        <div class="intro-card__icon">🌾</div>
-                        <div class="intro-card__title">智慧農業與環境監測</div>
-                        <div class="intro-card__text">利用無人機拍攝農田影像，透過 CNN
-                            模型分析農作物生長狀況、辨識病蟲害，甚至能區分雜草以進行精準噴灑。在環保方面，也能透過影像自動追蹤森林砍伐面積或海洋塑膠垃圾。</div>
-                        <img src="assets/CASE_09.jpg" alt="智慧農業" loading="lazy"
-                            style="margin-top:16px;width:100%;border-radius:6px;aspect-ratio:16/9;object-fit:cover;">
+                    <div class="case-card case-card--blue ripple-host">
+                        <div class="case-card__content">
+                            <div class="case-card__emoji">🌾</div>
+                            <div class="case-card__title">智慧農業與環境監測</div>
+                            <div class="case-card__desc">利用無人機拍攝農田影像，透過 CNN 模型分析農作物生長狀況、辨識病蟲害，甚至能區分雜草以進行精準噴灑。在環保方面，也能透過影像自動追蹤森林砍伐面積或海洋塑膠垃圾。</div>
+                        </div>
+                        <div class="case-card__img-wrap">
+                            <img class="case-card__img" src="assets/CASE_09.jpg" alt="智慧農業" loading="lazy">
+                        </div>
                     </div>
-                    <div class="intro-card ripple-host">
-                        <div class="intro-card__icon">🛒</div>
-                        <div class="intro-card__title">智慧零售與無人商店</div>
-                        <div class="intro-card__text">如 Amazon Go 透過店內密布的攝影機，運用 CNN
-                            即時追蹤顧客移動軌跡及拿取商品的動作，實現「拿了就走」的無感結帳體驗，同時協助分析店內客流熱區。</div>
-                        <img src="assets/CASE_10.jpg" alt="智慧零售" loading="lazy"
-                            style="margin-top:16px;width:100%;border-radius:6px;aspect-ratio:16/9;object-fit:cover;">
+                    <div class="case-card case-card--blue ripple-host">
+                        <div class="case-card__content">
+                            <div class="case-card__emoji">🛒</div>
+                            <div class="case-card__title">智慧零售與無人商店</div>
+                            <div class="case-card__desc">如 Amazon Go 透過店內密布的攝影機，運用 CNN 即時追蹤顧客移動軌跡及拿取商品的動作，實現「拿了就走」的無感結帳體驗，同時協助分析店內客流熱區。</div>
+                        </div>
+                        <div class="case-card__img-wrap">
+                            <img class="case-card__img" src="assets/CASE_10.jpg" alt="智慧零售" loading="lazy">
+                        </div>
                     </div>
                 </div>
 
@@ -1725,7 +1791,7 @@
                 </h3>
                 <p class="reveal"
                     style="font-size:.9rem;color:var(--clr-text-muted);margin-bottom:22px;line-height:1.75;">
-                    CNN 在幾十個應用領域進行得如火如荘，却同時有幾個深刻的結構性缺陷至今仍未完全解決。展現批判性思考，不認識這些限制，才能真正理解與遇見 CNN 。
+                    CNN 在各大應用領域發展得如火如荼，卻同時有幾個深刻的結構性缺陷至今仍未完全解決。唯有具備批判性思考並認識這些限制，才能真正理解與駕馭 CNN。
                 </p>
 
                 <!-- Limitation 1: Adversarial Attacks -->
@@ -1752,7 +1818,7 @@
                         <div class="verify-arrow">+</div>
                         <div class="verify-box">
                             <div class="verify-box__label" style="color:var(--clr-text-subtle);">👻 對抗性雜訊</div>
-                            <div class="verify-box__content">一層人眼<strong>完全不可見</strong>的特定雜訊矩陣（最大像素偏移 ≤ 0.007）。</div>
+                            <div class="verify-box__content">一層人眼<strong>難以察覺</strong>的特定雜訊矩陣（最大像素偏移 ≤ 0.007）。</div>
                         </div>
                         <div class="verify-arrow">=</div>
                         <div class="verify-box">
@@ -1781,7 +1847,7 @@
                         <div class="problem-item" style="padding:12px 16px;">
                             <div class="problem-item__badge" style="font-size:.9rem;">🛡️</div>
                             <div>
-                                <div class="problem-item__title">現行防御方向</div>
+                                <div class="problem-item__title">現行防禦方向</div>
                                 <div class="problem-item__desc">對抗訓練（Adversarial Training）、輸入平滑化（Input
                                     Smoothing）與認證魯棒性（Certified Robustness）是目前主流的防禦手段，但仍是「攻防拉鋸」的未解問題。</div>
                             </div>
@@ -1802,8 +1868,8 @@
                         </div>
                     </div>
                     <p style="font-size:.88rem;color:var(--clr-text-muted);line-height:1.85;margin-bottom:18px;">
-                        傳統 CNN 本質上只能判斷「某個特徵存不存在」，卻<strong>無法理解特徵之間的相對空間關係</strong>。最著名的思想實驗：若將一張人臉照片中眼睛與嘴巴的位置互換，CNN
-                        可能仍會自信地判斷它是「人臉」——因為所有的臉部特徵依然存在，只是位置錯誤。
+                        傳統 CNN 容易偏向判斷「某個特徵是否出現」，但對<strong>特徵之間的相對空間關係</strong>不一定有穩定表徵。常見的思想實驗是：若將一張人臉照片中眼睛與嘴巴的位置互換，部分 CNN
+                        仍可能判斷它接近「人臉」——因為許多局部臉部特徵依然存在，只是位置關係錯誤。
                     </p>
                     <div class="problems-list" style="gap:10px;margin-bottom:18px;">
                         <div class="problem-item" style="padding:12px 16px;">
@@ -1811,16 +1877,16 @@
                             <div>
                                 <div class="problem-item__title">問題根源：池化層的代價</div>
                                 <div class="problem-item__desc">池化層（Max
-                                    Pooling）在捨棄空間細節以換取位置不變性的同時，也丟失了「特徵在哪裡」的精確座標資訊。CNN 只知道「有眼睛」，不知道「眼睛在臉的上半部」。</div>
+                                    Pooling）在捨棄空間細節以換取局部穩健性的同時，也會弱化「特徵在哪裡」的精確座標資訊，使模型較難保留細緻的部件位置關係。</div>
                             </div>
                         </div>
                         <div class="problem-item" style="padding:12px 16px;">
                             <div class="problem-item__badge" style="font-size:.9rem;">🔬</div>
                             <div>
-                                <div class="problem-item__title">研究者的回應：膜囊網路</div>
+                                <div class="problem-item__title">研究者的回應：膠囊網路</div>
                                 <div class="problem-item__desc">正是為了解決這個缺陷，Geoffrey Hinton（深度學習三巨頭之一）在 2017
                                     年提出了<strong>膠囊網路（Capsule
-                                        Networks）</strong>。膠囊網路以「膠囊」取代神經元，每個膠囊同時編碼特徵的<em>存在機率</em>與<em>空間姿態（位置、旋轉、縮放）</em>，讓模型真正理解部件之間的層級空間關係。
+                                        Networks）</strong>。膠囊網路以「膠囊」取代傳統標量神經元，每個膠囊嘗試同時編碼特徵的<em>存在機率</em>與<em>空間姿態（位置、旋轉、縮放）</em>，讓模型更好地表徵部件之間的層級空間關係。
                                 </div>
                             </div>
                         </div>
@@ -1948,13 +2014,16 @@
                                 neural networks.</em> Nature, 542(7639), 115–118.
                         </li>
                         <li>
-                            Zhang, R. (2019). <em>Making Convolutional Networks Shift-Invariant Again.</em> International Conference on Machine Learning (ICML).
+                            Zhang, R. (2019). <em>Making Convolutional Networks Shift-Invariant Again.</em>
+                            International Conference on Machine Learning (ICML).
                         </li>
                         <li>
                             Goodfellow, I., Bengio, Y., &amp; Courville, A. (2016). <em>Deep Learning.</em> MIT Press.
                         </li>
                         <li>
-                            He, K., Zhang, X., Ren, S., &amp; Sun, J. (2016). <em>Deep residual learning for image recognition.</em> Proceedings of the IEEE conference on computer vision and pattern recognition.
+                            He, K., Zhang, X., Ren, S., &amp; Sun, J. (2016). <em>Deep residual learning for image
+                                recognition.</em> Proceedings of the IEEE conference on computer vision and pattern
+                            recognition.
                         </li>
                     </ol>
                 </div>
