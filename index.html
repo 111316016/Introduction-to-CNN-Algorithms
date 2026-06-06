@@ -117,6 +117,8 @@
                 <li><a href="#sec-1-4" class="toc-link" data-scroll>1.4 常見應用領域</a></li>
                 <li><a href="#sec-1-5" class="toc-link" data-scroll>1.5 關鍵超參數</a></li>
                 <li><a href="#sec-1-6" class="toc-link" data-scroll>1.6 程式碼實作</a></li>
+                <li><a href="#sec-1-7" class="toc-link" data-scroll>1.7 核心數學與演算法複雜度</a></li>
+                <li><a href="#sec-1-8" class="toc-link" data-scroll>1.8 進階實務技術</a></li>
             </ul>
         </li>
         <li class="toc-has-sub">
@@ -160,6 +162,7 @@
             <ul class="toc-sublist">
                 <li><a href="#sec-5-1" class="toc-link" data-scroll>5.1 常見應用領域</a></li>
                 <li><a href="#sec-5-2" class="toc-link" data-scroll>5.2 深入案例分析</a></li>
+                <li><a href="#sec-5-3" class="toc-link" data-scroll>5.3 致命弱點與未來挑戰</a></li>
             </ul>
         </li>
         <li class="toc-has-sub">
@@ -425,7 +428,7 @@
     <p class="reveal" style="font-size:.9rem;color:var(--clr-text-muted);margin-bottom:14px;line-height:1.75;">
         以上理論如何轉化為實際的程式碼呢？在深度學習框架 PyTorch 中，建構一個包含「卷積」與「池化」的簡單 CNN 模型只需要短短幾行：
     </p>
-    <div class="card reveal" style="padding: 0; overflow: hidden; background: #1e1e1e; border-color: #333;">
+    <div class="card reveal code-block-container" style="padding: 0; overflow: hidden; background: #1e1e1e; border-color: #333;">
         <pre style="margin: 0; padding: 20px; color: #d4d4d4; font-family: 'Courier New', Consolas, monospace; font-size: 13.5px; line-height: 1.6; overflow-x: auto;"><code><span style="color:#c586c0;">import</span> torch.nn <span style="color:#c586c0;">as</span> nn
 
 <span style="color:#569cd6;">class</span> <span style="color:#4ec9b0;">SimpleCNN</span>(nn.Module):
@@ -443,6 +446,214 @@
         x = <span style="color:#9cdcfe;">self</span>.relu(x)   <span style="color:#6a9955;"># 2. 非線性轉換</span>
         x = <span style="color:#9cdcfe;">self</span>.pool(x)   <span style="color:#6a9955;"># 3. 降維與特徵保留</span>
         <span style="color:#c586c0;">return</span> x</code></pre>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 1.7 -->
+    <h3 id="sec-1-7" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+        <span style="opacity:.5;">1.7</span> 核心數學與演算法複雜度
+    </h3>
+    <p class="reveal" style="font-size:.9rem;color:var(--clr-text-muted);margin-bottom:24px;line-height:1.75;">
+        理解 CNN「為什麼這樣設計」，不只停留在概念，更需要從底層數學出發。以下兩個面向——特徵圖的維度計算與時間複雜度——是深入掌握卷積運算的關鍵基礎。
+    </p>
+
+    <!-- 1.7.1 Feature Map Formula -->
+    <div class="card reveal" style="margin-bottom:20px;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <div class="problem-item__badge">📐</div>
+            <div>
+                <div style="font-size:.72rem;font-weight:700;letter-spacing:.08em;color:var(--clr-primary);text-transform:uppercase;margin-bottom:2px;">Feature Map 維度公式</div>
+                <div style="font-size:.95rem;font-weight:700;color:var(--clr-text);">輸出尺寸如何被決定？</div>
+            </div>
+        </div>
+        <p style="font-size:.88rem;color:var(--clr-text-muted);line-height:1.8;margin-bottom:18px;">
+            每次卷積運算後，特徵圖（Feature Map）的長與寬尺寸，由以下四個參數共同決定。這條公式讓我們在設計網路架構前，就能精確預測每一層的張量維度：
+        </p>
+        <div style="background:var(--clr-surface-2);border-radius:var(--radius-md);padding:20px 24px;margin-bottom:18px;text-align:center;border:1px solid var(--clr-border-strong);">
+            <div style="font-family:'Courier New',Consolas,monospace;font-size:1.35rem;font-weight:800;color:var(--clr-primary);letter-spacing:.04em;">
+                O = &lfloor;(N &minus; K + 2P) / S&rfloor; + 1
+            </div>
+        </div>
+        <div class="problems-list" style="gap:10px;margin-bottom:0;">
+            <div class="problem-item ripple-host" style="padding:12px 16px;">
+                <div class="problem-item__badge" style="font-family:'Courier New',monospace;font-size:.88rem;font-weight:800;color:var(--clr-primary);">N</div>
+                <div>
+                    <div class="problem-item__title">輸入張量尺寸（Input Size）</div>
+                    <div class="problem-item__desc">輸入特徵圖（或原始影像）的邊長像素數。例如一張 32×32 的輸入圖片，N = 32。</div>
+                </div>
+            </div>
+            <div class="problem-item ripple-host" style="padding:12px 16px;">
+                <div class="problem-item__badge" style="font-family:'Courier New',monospace;font-size:.88rem;font-weight:800;color:var(--clr-primary);">K</div>
+                <div>
+                    <div class="problem-item__title">卷積核大小（Kernel Size）</div>
+                    <div class="problem-item__desc">卷積核的邊長。最常見的是 3×3（K = 3）或 5×5（K = 5）。核越大感受野越廣，但計算成本也越高。</div>
+                </div>
+            </div>
+            <div class="problem-item ripple-host" style="padding:12px 16px;">
+                <div class="problem-item__badge" style="font-family:'Courier New',monospace;font-size:.88rem;font-weight:800;color:var(--clr-primary);">P</div>
+                <div>
+                    <div class="problem-item__title">填充量（Padding）</div>
+                    <div class="problem-item__desc">在輸入邊緣補零的圈數。當 P = 1 搭配 K = 3 時，輸出尺寸與輸入相同（Same Padding），可有效保留邊緣特徵資訊。</div>
+                </div>
+            </div>
+            <div class="problem-item ripple-host" style="padding:12px 16px;">
+                <div class="problem-item__badge" style="font-family:'Courier New',monospace;font-size:.88rem;font-weight:800;color:var(--clr-primary);">S</div>
+                <div>
+                    <div class="problem-item__title">步幅（Stride）</div>
+                    <div class="problem-item__desc">卷積核每次滑動的格數。S = 1 為逐格掃描；S = 2 時輸出尺寸約為輸入的一半，常被用於替代池化層進行降維。</div>
+                </div>
+            </div>
+        </div>
+        <div class="highlight-box" style="margin-top:16px;margin-bottom:0;">
+            <strong>📌 範例驗算：</strong>輸入尺寸 N = 28，卷積核 K = 3，填充 P = 1，步幅 S = 1<br>
+            → O = &lfloor;(28 &minus; 3 + 2×1) / 1&rfloor; + 1 = &lfloor;27&rfloor; + 1 = <strong>28</strong>（輸入輸出等尺寸）
+        </div>
+    </div>
+
+    <!-- 1.7.2 Time Complexity -->
+    <div class="card reveal">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <div class="problem-item__badge">⏱️</div>
+            <div>
+                <div style="font-size:.72rem;font-weight:700;letter-spacing:.08em;color:var(--clr-primary);text-transform:uppercase;margin-bottom:2px;">時間複雜度分析</div>
+                <div style="font-size:.95rem;font-weight:700;color:var(--clr-text);">為什麼卷積運算吃重 GPU 資源？</div>
+            </div>
+        </div>
+        <p style="font-size:.88rem;color:var(--clr-text-muted);line-height:1.8;margin-bottom:18px;">
+            單一卷積層的計算量可以用 Big-O 複雜度精確刻畫。它揭示了為何訓練大型 CNN 需要強大的 GPU 算力：
+        </p>
+        <div style="background:var(--clr-surface-2);border-radius:var(--radius-md);padding:20px 24px;margin-bottom:18px;text-align:center;border:1px solid var(--clr-border-strong);">
+            <div style="font-family:'Courier New',Consolas,monospace;font-size:1.2rem;font-weight:800;color:var(--clr-primary);letter-spacing:.03em;">
+                O(K<sup>2</sup> &times; C<sub>in</sub> &times; C<sub>out</sub> &times; H<sub>out</sub> &times; W<sub>out</sub>)
+            </div>
+        </div>
+        <div class="problems-list" style="gap:14px;margin-bottom:0;">
+            <div class="problem-item ripple-host" style="padding:16px 20px;flex-direction:column;align-items:flex-start;gap:10px;">
+                <div class="problem-item__badge" style="font-family:'Courier New',monospace;font-size:.85rem;font-weight:800;color:var(--clr-primary);min-width:115px;height:auto;padding:6px 12px;border-radius:var(--radius-sm);">K²</div>
+                <div>
+                    <div class="problem-item__title">卷積核面積</div>
+                    <div class="problem-item__desc">每次滑動時，卷積核需要對 K×K 個位置各做一次乘法與加法。3×3 核就是 9 次運算，5×5 核則是 25 次——核尺寸的影響是平方級增長。</div>
+                </div>
+            </div>
+            <div class="problem-item ripple-host" style="padding:16px 20px;flex-direction:column;align-items:flex-start;gap:10px;">
+                <div class="problem-item__badge" style="font-family:'Courier New',monospace;font-size:.85rem;font-weight:800;color:var(--clr-primary);min-width:115px;height:auto;padding:6px 12px;border-radius:var(--radius-sm);">C<sub>in</sub></div>
+                <div>
+                    <div class="problem-item__title">輸入通道數（Input Channels）</div>
+                    <div class="problem-item__desc">每個卷積核必須分別對每個輸入通道做運算後加總。例如 RGB 圖片有 3 個通道；深層網路的特徵圖通道數可高達 512 甚至 2048。</div>
+                </div>
+            </div>
+            <div class="problem-item ripple-host" style="padding:16px 20px;flex-direction:column;align-items:flex-start;gap:10px;">
+                <div class="problem-item__badge" style="font-family:'Courier New',monospace;font-size:.85rem;font-weight:800;color:var(--clr-primary);min-width:115px;height:auto;padding:6px 12px;border-radius:var(--radius-sm);">C<sub>out</sub></div>
+                <div>
+                    <div class="problem-item__title">輸出通道數（Output Channels）</div>
+                    <div class="problem-item__desc">即這一層使用的卷積核總數量（Filter 數）。每個 Filter 獨立做一次完整的卷積，產生一張特徵圖。Filter 越多，模型表達力越強，但計算量等比例增加。</div>
+                </div>
+            </div>
+            <div class="problem-item ripple-host" style="padding:16px 20px;flex-direction:column;align-items:flex-start;gap:10px;">
+                <div class="problem-item__badge" style="font-family:'Courier New',monospace;font-size:.85rem;font-weight:800;color:var(--clr-primary);min-width:115px;height:auto;padding:6px 12px;border-radius:var(--radius-sm);">H<sub>out</sub>×W<sub>out</sub></div>
+                <div>
+                    <div class="problem-item__title">輸出特徵圖的空間尺寸</div>
+                    <div class="problem-item__desc">卷積核總共需要滑動的次數，等於輸出特徵圖的高度乘以寬度。一張 224×224 的特徵圖就需要滑動 50,176 次，大尺寸輸入是計算量的主要來源。</div>
+                </div>
+            </div>
+        </div>
+        <div class="highlight-box" style="margin-top:16px;margin-bottom:0;">
+            <strong>💡 為什麼需要 GPU？</strong>上述乘法中，所有輸出位置的計算彼此<strong>完全獨立</strong>，非常適合 GPU 的大規模<strong>平行運算</strong>架構。以 ResNet-50 為例，單次前向傳播就需要約 <strong>40 億次浮點運算（4 GFLOPs）</strong>，GPU 的數千個核心能同時並行計算，大幅縮短訓練時間。
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- 1.8 -->
+    <h3 id="sec-1-8" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+        <span style="opacity:.5;">1.8</span> 實務上提升 CNN 表現的進階技術
+    </h3>
+    <p class="reveal" style="font-size:.9rem;color:var(--clr-text-muted);margin-bottom:24px;line-height:1.75;">
+        知道如何建構 CNN 尚不夠——在實際專案中，工程師還會運用一系列經實驗驗證的進階技術，來讓模型更準確、更高效、更容易部署。以下六項是最常見且影響最大的技術：
+    </p>
+
+    <div class="intro-grid reveal" style="margin-bottom:24px;">
+        <div class="intro-card ripple-host">
+            <div class="intro-card__icon">🎲</div>
+            <div class="intro-card__title">Dropout（正則化）</div>
+            <div class="intro-card__text">訓練時隨機「關閉」一定比例（如 20%）的神經元，強迫網路不依賴少數路徑，有效防止過擬合（Overfitting）。</div>
+            <div style="margin-top:12px;padding:8px 12px;background:var(--clr-surface-2);border-radius:var(--radius-sm);font-size:.78rem;color:var(--clr-text-subtle);font-weight:600;">常見設定：p = 0.2 ~ 0.5，推理時必須關閉</div>
+        </div>
+        <div class="intro-card ripple-host">
+            <div class="intro-card__icon">🔄</div>
+            <div class="intro-card__title">Data Augmentation（資料增強）</div>
+            <div class="intro-card__text">對原始影像施加線性變換（旋轉、平移、翻轉、裁剪）擴充訓練集，讓同一素材產生多種視角，大幅增強泛化能力。</div>
+            <div style="margin-top:12px;padding:8px 12px;background:var(--clr-surface-2);border-radius:var(--radius-sm);font-size:.78rem;color:var(--clr-text-subtle);font-weight:600;">進階技術：Mixup、CutMix 可混合多張圖片</div>
+        </div>
+        <div class="intro-card ripple-host">
+            <div class="intro-card__icon">⚖️</div>
+            <div class="intro-card__title">Batch Normalization（批次正規化）</div>
+            <div class="intro-card__text">將每層的啟動值標準化（均值為 0、方差為 1）後再訓練。大幅加快收斂速度、降低對起始學習率的敏感度，已成為現代 CNN 的標準配備。</div>
+            <div style="margin-top:12px;padding:8px 12px;background:var(--clr-surface-2);border-radius:var(--radius-sm);font-size:.78rem;color:var(--clr-text-subtle);font-weight:600;">通常插入於卷積層後、激活函數前</div>
+        </div>
+        <div class="intro-card ripple-host">
+            <div class="intro-card__icon">🚀</div>
+            <div class="intro-card__title">Transfer Learning（遷移學習）</div>
+            <div class="intro-card__text">利用在大規模資料集（如 ImageNet）預先訓練好的模型權重，再針對目標任務進行微調（Fine-tuning）。對小資料集專案尤其第一選擇，大幅節省算力。</div>
+            <div style="margin-top:12px;padding:8px 12px;background:var(--clr-surface-2);border-radius:var(--radius-sm);font-size:.78rem;color:var(--clr-text-subtle);font-weight:600;">典型流程：凍結卷積層 → 只訓練分類頭 → 逐步解凍</div>
+        </div>
+        <div class="intro-card ripple-host">
+            <div class="intro-card__icon">✂️</div>
+            <div class="intro-card__title">Depthwise Separable Conv（深度可分離卷積）</div>
+            <div class="intro-card__text">將標準卷積分解為「逐通道卷積」+「逐點卷積」兩步，計算量可減少至原先的 1/8~1/9，是 MobileNet 的核心設計，廣泛用於行動裝置部署。</div>
+            <div style="margin-top:12px;padding:8px 12px;background:var(--clr-surface-2);border-radius:var(--radius-sm);font-size:.78rem;color:var(--clr-text-subtle);font-weight:600;">適合邊緣計算（Edge AI），參數量大幅下降</div>
+        </div>
+        <div class="intro-card ripple-host">
+            <div class="intro-card__icon">📉</div>
+            <div class="intro-card__title">Learning Rate Scheduling（學習率調度）</div>
+            <div class="intro-card__text">訓練時動態調整學習率而非固定值。常見策略如 Warmup 預熱、CosineAnnealing 週期衰減等，讓模型在訓練前期穩定進步、後期精細收斂。</div>
+            <div style="margin-top:12px;padding:8px 12px;background:var(--clr-surface-2);border-radius:var(--radius-sm);font-size:.78rem;color:var(--clr-text-subtle);font-weight:600;">OneCycleLR、CosineAnnealingLR 為 PyTorch 常用策略</div>
+        </div>
+    </div>
+
+    <!-- Practical workflow card -->
+    <div class="card reveal" style="margin-bottom:0;">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+            <div class="problem-item__badge">🗺️</div>
+            <div>
+                <div style="font-size:.72rem;font-weight:700;letter-spacing:.08em;color:var(--clr-primary);text-transform:uppercase;margin-bottom:2px;">Practical Workflow</div>
+                <div style="font-size:.95rem;font-weight:700;color:var(--clr-text);">實際模型開發建議流程</div>
+            </div>
+        </div>
+        <p style="font-size:.85rem;color:var(--clr-text-muted);line-height:1.8;margin-bottom:22px;">
+            在工業實際專案中，工程師幾乎不會從隨機權重開始訓練大型 CNN。常見的最佳實踐如下：
+        </p>
+        <div class="flow-steps">
+            <div class="flow-step ripple-host">
+                <div class="flow-step__num" data-tip="選擇基礎架構">1</div>
+                <div class="flow-step__content">
+                    <div class="flow-step__title">選擇預訓練模型</div>
+                    <div class="flow-step__desc">依任務類型選擇合適的預訓練架構，如影像分類選 ResNet / EfficientNet，視覺語言任務選 ViT，物件偵測選 YOLO / Faster R-CNN。</div>
+                </div>
+            </div>
+            <div class="flow-step ripple-host">
+                <div class="flow-step__num" data-tip="擴充訓練資料">2</div>
+                <div class="flow-step__content">
+                    <div class="flow-step__title">資料增強與預處理</div>
+                    <div class="flow-step__desc">套用 Augmentation Pipeline（翻轉、色彩抖動、Cutout 等），並搭配 Batch Normalization 穩定訓練分佈。</div>
+                </div>
+            </div>
+            <div class="flow-step ripple-host">
+                <div class="flow-step__num" data-tip="遷移學習微調">3</div>
+                <div class="flow-step__content">
+                    <div class="flow-step__title">凍結主幹 + Fine-tune</div>
+                    <div class="flow-step__desc">先凍結卷積主幹，只訓練分類頭（Head）；待收斂後再逐層解凍，搭配 Dropout 與 LR Scheduling 進行精細微調。</div>
+                </div>
+            </div>
+            <div class="flow-step ripple-host">
+                <div class="flow-step__num" data-tip="部署準備">4</div>
+                <div class="flow-step__content">
+                    <div class="flow-step__title">輕量化與導出</div>
+                    <div class="flow-step__desc">透過剪枝（Pruning）、量化（Quantization）或改用 Depthwise Separable Conv 縮減模型大小，最終導出為 ONNX 或 TensorRT 格式以利部署。</div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </section>
@@ -1006,6 +1217,114 @@
             </a>
         </div>
     </div>
+
+    <div class="divider"></div>
+
+    <!-- 5.3 -->
+    <h3 id="sec-5-3" class="reveal" style="font-size:1rem;font-weight:700;color:var(--clr-primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;margin-top:40px;">
+        <span style="opacity:.5;">5.3</span> CNN 的致命弱點與未來挑戰
+    </h3>
+    <p class="reveal" style="font-size:.9rem;color:var(--clr-text-muted);margin-bottom:22px;line-height:1.75;">
+        CNN 在幾十個應用領域進行得如火如荘，却同時有幾個深刻的結構性缺陷至今仍未完全解決。展現批判性思考，不認識這些限制，才能真正理解與遇見 CNN 。
+    </p>
+
+    <!-- Limitation 1: Adversarial Attacks -->
+    <div class="card reveal" style="margin-bottom:20px;border-left:4px solid var(--clr-danger);">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+            <div class="problem-item__badge" style="background:rgba(201,42,42,.1);font-size:1.1rem;">⚠️</div>
+            <div>
+                <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;color:var(--clr-danger);text-transform:uppercase;margin-bottom:2px;">Limitation 01 &middot; Security</div>
+                <div style="font-size:.95rem;font-weight:700;color:var(--clr-text);">對抗性攻擊（Adversarial Attacks）</div>
+            </div>
+        </div>
+        <p style="font-size:.88rem;color:var(--clr-text-muted);line-height:1.85;margin-bottom:18px;">
+            2013 年，Szegedy 等人發現了 CNN 一個令人震驚的脆弱性：只需在輸入影像上疊加一層<strong>人類肉眼完全察覺不到的微小擾動（雜訊）</strong>，就能讓訓練精良的 CNN 以極高的信心度做出完全錯誤的判斷——這類攻擊被稱為「對抗性攻擊」。
+        </p>
+        <div class="verify-flow reveal" style="margin-bottom:18px;gap:8px;">
+            <div class="verify-box">
+                <div class="verify-box__label" style="color:var(--clr-primary);">🐼 原始影像</div>
+                <div class="verify-box__content">一張清晰的熊貓照片。CNN 以 57.7% 的信心度正確辨識為「<strong>熊貓</strong>」。</div>
+            </div>
+            <div class="verify-arrow">+</div>
+            <div class="verify-box">
+                <div class="verify-box__label" style="color:var(--clr-text-subtle);">👻 對抗性雜訊</div>
+                <div class="verify-box__content">一層人眼<strong>完全不可見</strong>的特定雜訊矩陣（最大像素偏移 ≤ 0.007）。</div>
+            </div>
+            <div class="verify-arrow">=</div>
+            <div class="verify-box">
+                <div class="verify-box__label" style="color:var(--clr-danger);">❌ 攻擊後輸出</div>
+                <div class="verify-box__content">CNN 以 <strong>99.3% 的信心度</strong>將同一張圖判定為「長臂猿」——完全錯誤。</div>
+            </div>
+        </div>
+        <div class="problems-list" style="gap:10px;margin-bottom:0;">
+            <div class="problem-item" style="padding:12px 16px;">
+                <div class="problem-item__badge" style="font-size:.9rem;">🔍</div>
+                <div>
+                    <div class="problem-item__title">為什麼會發生？</div>
+                    <div class="problem-item__desc">CNN 學到的是<strong>像素層級的統計規律</strong>，而非真正理解物體的語義。對抗性雜訊利用梯度資訊，精確地將影像推往決策邊界的另一側，讓模型在人眼看來「根本沒有變化」的圖片上失效。</div>
+                </div>
+            </div>
+            <div class="problem-item" style="padding:12px 16px;">
+                <div class="problem-item__badge" style="font-size:.9rem;">🚨</div>
+                <div>
+                    <div class="problem-item__title">實際安全威脅</div>
+                    <div class="problem-item__desc">在自動駕駛場景中，攻擊者可在停車標誌上貼一張人眼看似普通貼紙的對抗性補丁，讓車輛的 CNN 將其誤認為「限速 45」標誌。這不再只是學術問題，而是實際的安全危機。</div>
+                </div>
+            </div>
+            <div class="problem-item" style="padding:12px 16px;">
+                <div class="problem-item__badge" style="font-size:.9rem;">🛡️</div>
+                <div>
+                    <div class="problem-item__title">現行防御方向</div>
+                    <div class="problem-item__desc">對抗訓練（Adversarial Training）、輸入平滑化（Input Smoothing）與認證魯棒性（Certified Robustness）是目前主流的防禦手段，但仍是「攻防拉鋸」的未解問題。</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Limitation 2: Spatial Invariance Flaw -->
+    <div class="card reveal" style="margin-bottom:20px;border-left:4px solid var(--clr-warning);">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+            <div class="problem-item__badge" style="background:rgba(230,119,0,.1);font-size:1.1rem;">🧩</div>
+            <div>
+                <div style="font-size:.7rem;font-weight:700;letter-spacing:.08em;color:var(--clr-warning);text-transform:uppercase;margin-bottom:2px;">Limitation 02 &middot; Spatial Understanding</div>
+                <div style="font-size:.95rem;font-weight:700;color:var(--clr-text);">缺乏空間層級概念（Spatial Hierarchy Flaw）</div>
+            </div>
+        </div>
+        <p style="font-size:.88rem;color:var(--clr-text-muted);line-height:1.85;margin-bottom:18px;">
+            傳統 CNN 本質上只能判斷「某個特徵存不存在」，卻<strong>無法理解特徵之間的相對空間關係</strong>。最著名的思想實驗：若將一張人臉照片中眼睛與嘴巴的位置互換，CNN 可能仍會自信地判斷它是「人臉」——因為所有的臉部特徵依然存在，只是位置錯誤。
+        </p>
+        <div class="problems-list" style="gap:10px;margin-bottom:18px;">
+            <div class="problem-item" style="padding:12px 16px;">
+                <div class="problem-item__badge" style="font-size:.9rem;">❓</div>
+                <div>
+                    <div class="problem-item__title">問題根源：池化層的代價</div>
+                    <div class="problem-item__desc">池化層（Max Pooling）在捨棄空間細節以換取位置不變性的同時，也丟失了「特徵在哪裡」的精確座標資訊。CNN 只知道「有眼睛」，不知道「眼睛在臉的上半部」。</div>
+                </div>
+            </div>
+            <div class="problem-item" style="padding:12px 16px;">
+                <div class="problem-item__badge" style="font-size:.9rem;">🔬</div>
+                <div>
+                    <div class="problem-item__title">研究者的回應：膜囊網路</div>
+                    <div class="problem-item__desc">正是為了解決這個缺陷，Geoffrey Hinton（深度學習三巨頭之一）在 2017 年提出了<strong>膠囊網路（Capsule Networks）</strong>。膠囊網路以「膠囊」取代神經元，每個膠囊同時編碼特徵的<em>存在機率</em>與<em>空間姿態（位置、旋轉、縮放）</em>，讓模型真正理解部件之間的層級空間關係。</div>
+                </div>
+            </div>
+            <div class="problem-item" style="padding:12px 16px;">
+                <div class="problem-item__badge" style="font-size:.9rem;">⚡</div>
+                <div>
+                    <div class="problem-item__title">目前現況與展望</div>
+                    <div class="problem-item__desc">膠囊網路在小型資料集上展示了驚人潛力，但其訓練成本極高，目前尚未取代 CNN 成為主流。另一條路線是 Vision Transformer（ViT），透過自注意力機制（Self-Attention）讓模型學習全局的特徵關係，在某種程度上緩解了此問題。</div>
+                </div>
+            </div>
+        </div>
+        <div class="highlight-box" style="margin-bottom:0;">
+            <strong>🔑 批判性小結：</strong>這兩個弱點都指向同一個深層問題——CNN 學到的是<strong>影像的表面統計特徵</strong>，而非人類認知世界的方式。真正「理解」影像，需要的不只是特徵提取，更需要對物體結構、空間關係，乃至物理世界的先驗知識。這正是下一代視覺 AI 架構（Capsule Networks、ViT、Neuro-Symbolic AI）持續探索的核心命題。
+        </div>
+    </div>
+
+    <!-- Critical Summary Box -->
+    <div class="highlight-box highlight-box--teal reveal" style="margin-bottom:0;">
+        <strong>📊 CNN 優劣勢總覽：</strong>CNN 至今仍是電腦視覺的核心骨幹，擁有無可取代的工程成熟度與生態系統。但作為學習者，認識其<strong>對抗脆弱性</strong>、<strong>空間理解的先天局限</strong>，以及<strong>黑盒決策的可解釋性問題</strong>，是避免盲目崇拜、做出明智技術選擇的關鍵。真正的理解，始於知道它「什麼時候會失敗」。
+    </div>
 </div>
 </section>
 
@@ -1162,9 +1481,7 @@
 <button class="back-to-top" id="back-to-top" aria-label="回到頂部">
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
-<button class="go-to-bottom" id="go-to-bottom" aria-label="前往底部">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-</button>
+
 
 <!-- ===== LIGHTBOX ===== -->
 <div class="lightbox" id="lightbox" aria-hidden="true">

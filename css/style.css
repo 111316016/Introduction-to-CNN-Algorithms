@@ -1179,11 +1179,11 @@ body {
     color: var(--clr-primary-d);
 }
 
-/* ===== FLOATING BUTTONS (back-to-top / go-to-bottom) ===== */
-.back-to-top,
-.go-to-bottom {
+/* ===== FLOATING BUTTONS (back-to-top) ===== */
+.back-to-top {
     position: fixed;
     right: 24px;
+    bottom: 28px;
     width: 44px;
     height: 44px;
     border-radius: 50%;
@@ -1201,17 +1201,13 @@ body {
     transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s;
     z-index: 90;
 }
-.back-to-top { bottom: 80px; }
-.go-to-bottom { bottom: 28px; }
 
-.back-to-top.visible,
-.go-to-bottom.visible {
+.back-to-top.visible {
     opacity: 1;
     transform: translateY(0);
     pointer-events: all;
 }
-.back-to-top:hover,
-.go-to-bottom:hover {
+.back-to-top:hover {
     background: var(--clr-primary-d);
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(59,91,219,0.38);
@@ -2674,4 +2670,47 @@ body {
 /* Add zoom cursor to content images */
 .section img {
     cursor: zoom-in;
+}
+
+/* ===== CODE COPY BUTTON ===== */
+.code-block-container {
+    position: relative;
+}
+
+.copy-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    color: #b0b3b8;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 10;
+}
+
+.copy-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.copy-btn:active {
+    transform: scale(0.95);
+}
+
+.copy-btn.copied {
+    background: rgba(46, 204, 113, 0.15);
+    border-color: rgba(46, 204, 113, 0.3);
+    color: #2ecc71;
 }

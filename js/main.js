@@ -559,3 +559,54 @@ if (lightbox && lightboxImg && lightboxClose) {
         }
     });
 }
+
+/* ---- 9. Code Copy Button ---- */
+const initCopyButtons = () => {
+    const codeBlocks = document.querySelectorAll('.code-block-container');
+    
+    codeBlocks.forEach(container => {
+        const pre = container.querySelector('pre');
+        if (!pre) return;
+        
+        const copyBtn = document.createElement('button');
+        copyBtn.className = 'copy-btn';
+        copyBtn.setAttribute('aria-label', '複製程式碼');
+        
+        const copyIcon = `
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+        `;
+        const checkIcon = `
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        `;
+        
+        copyBtn.innerHTML = `${copyIcon} <span>複製</span>`;
+        container.appendChild(copyBtn);
+        
+        copyBtn.addEventListener('click', () => {
+            const codeText = pre.innerText || pre.textContent;
+            
+            navigator.clipboard.writeText(codeText).then(() => {
+                copyBtn.classList.add('copied');
+                copyBtn.innerHTML = `${checkIcon} <span>已複製</span>`;
+                
+                setTimeout(() => {
+                    copyBtn.classList.remove('copied');
+                    copyBtn.innerHTML = `${copyIcon} <span>複製</span>`;
+                }, 2000);
+            }).catch(err => {
+                console.error('無法複製文字: ', err);
+            });
+        });
+    });
+};
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCopyButtons);
+} else {
+    initCopyButtons();
+}
