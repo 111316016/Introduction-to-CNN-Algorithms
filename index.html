@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-TW">
 
 <head>
@@ -743,7 +743,8 @@
                             <div class="flow-step__num" data-tip="選擇基礎架構">1</div>
                             <div class="flow-step__content">
                                 <div class="flow-step__title">選擇預訓練模型</div>
-                                <div class="flow-step__desc">依任務類型選擇合適的預訓練架構，如影像分類選 ResNet / EfficientNet 或 ViT，視覺語言任務常搭配 CLIP 類模型，物件偵測選 YOLO / Faster R-CNN。</div>
+                                <div class="flow-step__desc">依任務類型選擇合適的預訓練架構，如影像分類選 ResNet / EfficientNet 或
+                                    ViT，視覺語言任務常搭配 CLIP 類模型，物件偵測選 YOLO / Faster R-CNN。</div>
                             </div>
                         </div>
                         <div class="flow-step ripple-host">
@@ -900,7 +901,8 @@
                                 <td>CNN 是誰提出的？如何解決 ANN 的問題？</td>
                                 <td>1950s Hubel & Wiesel 發現貓咪視覺皮層<strong>局部感知機制</strong>；1998 年楊立昆（Yann LeCun）發表
                                     <strong>LeNet-5</strong>，首度用 CNN
-                                    辨識手寫郵遞區號。</td>
+                                    辨識手寫郵遞區號。
+                                </td>
                                 <td>理解 CNN 的誕生有歷史背景，科學進步是站在前人肩膀上的。</td>
                             </tr>
                             <tr>
@@ -908,7 +910,8 @@
                                 <td>CNN 整體架構：Input → Conv → ReLU → Pooling → FC → Output 的完整流程？</td>
                                 <td>用<strong>「流水線」</strong>比喻：輸入層（報案中心）→ <strong>卷積層（前線調查員）</strong>→
                                     <strong>ReLU（嚴格審核員）</strong>→ <strong>池化層（總結秘書）</strong>→
-                                    <strong>全連接層（綜合研判室）</strong>→ 輸出層（蓋章判決）。</td>
+                                    <strong>全連接層（綜合研判室）</strong>→ 輸出層（蓋章判決）。
+                                </td>
                                 <td>建立了各層功能的直觀印象，能說出每層「做什麼、為什麼這樣做」。</td>
                             </tr>
                             <tr>
@@ -940,7 +943,8 @@
                                 <td>10</td>
                                 <td>CNN 如何學習？Forward Propagation、Loss Function、Backpropagation 的運作原理？</td>
                                 <td><strong>前向傳播</strong>（寫考卷）→ <strong>Loss 計算誤差</strong>（老師改分）→
-                                    <strong>反向傳播</strong>利用鏈式法則找戰犯 → <strong>梯度下降</strong>更新參數。如此循環數萬次，CNN 從亂猜變精準。</td>
+                                    <strong>反向傳播</strong>利用鏈式法則找戰犯 → <strong>梯度下降</strong>更新參數。如此循環數萬次，CNN 從亂猜變精準。
+                                </td>
                                 <td>CNN 的學習是可被數學描述的迭代過程，而非不可解釋的「魔法」。</td>
                             </tr>
                             <tr>
@@ -986,7 +990,8 @@
                                 <td>用 TensorFlow/Keras 建立 MNIST 手寫數字辨識 CNN 的完整程式碼？</td>
                                 <td>提供完整可執行程式：資料正規化 ÷255 → <strong>Conv2D+MaxPool</strong> 兩組 →
                                     <strong>Flatten+Dense+Softmax</strong> → <strong>Adam 優化器</strong> → 5
-                                    Epochs 訓練，最終測試集準確率 <strong>99.12%</strong>。</td>
+                                    Epochs 訓練，最終測試集準確率 <strong>99.12%</strong>。
+                                </td>
                                 <td>從「看懂理論」跨越到「寫出程式」，是本次學習最大的突破。</td>
                             </tr>
                             <tr>
@@ -1002,7 +1007,8 @@
                                 <td>如何使用自己的圖片資料集訓練 CNN（資料蒐集到部署的完整流程）？</td>
                                 <td>6 步驟：拍攝 100-500 張 → <strong>LabelImg</strong> 標註 → 旋轉翻轉<strong>資料增強</strong> →
                                     <strong>遷移學習</strong>（使用預訓練 ResNet 微調）→
-                                    混淆矩陣評估 → <strong>TFLite</strong> 邊緣部署。</td>
+                                    混淆矩陣評估 → <strong>TFLite</strong> 邊緣部署。
+                                </td>
                                 <td>具備了從零到部署的完整 AI 工程思維，能設計真實的 AI 應用專案。</td>
                             </tr>
                             <tr>
@@ -1336,7 +1342,7 @@
                 <div class="section__header reveal">
                     <div class="section__label">
                         <span class="task-num">4</span>
-                        <span class="task-name">Task 04 · 視覺化說明（佔 20%）</span>
+                        <span class="task-name">Task 04 · 視覺化說明（與應用案例共佔 20%）</span>
                     </div>
                     <h2 class="section__title">CNN 架構視覺化</h2>
                     <p class="section__desc">透過圖表呈現 CNN 的整體架構，以及點擊各層查看詳細說明。</p>
@@ -1672,7 +1678,7 @@
                 <div class="section__header reveal">
                     <div class="section__label">
                         <span class="task-num">5</span>
-                        <span class="task-name">Task 05 · 應用案例（佔 20%）</span>
+                        <span class="task-name">Task 05 · 應用案例（與視覺化共佔 20%）</span>
                     </div>
                     <h2 class="section__title">CNN 的實際應用案例</h2>
                     <p class="section__desc">CNN 的影響力已遍及眾多行業，以下是幾個具代表性的應用場景。</p>
@@ -1687,7 +1693,8 @@
                         <div class="case-card__content">
                             <div class="case-card__emoji">🩺</div>
                             <div class="case-card__title">醫療影像診斷</div>
-                            <div class="case-card__desc">CNN 可分析 X 光片、MRI 與 CT 掃描影像，協助醫師偵測早期腫瘤、視網膜病變、肺炎等疾病。Google DeepMind 的 AI 系統在黃斑部病變偵測上已達到眼科醫師的準確率水準。</div>
+                            <div class="case-card__desc">CNN 可分析 X 光片、MRI 與 CT 掃描影像，協助醫師偵測早期腫瘤、視網膜病變、肺炎等疾病。Google
+                                DeepMind 的 AI 系統在黃斑部病變偵測上已達到眼科醫師的準確率水準。</div>
                         </div>
                         <div class="case-card__img-wrap">
                             <img class="case-card__img" src="assets/CASE_05.png" alt="醫療影像診斷" loading="lazy">
@@ -1697,7 +1704,8 @@
                         <div class="case-card__content">
                             <div class="case-card__emoji">🚗</div>
                             <div class="case-card__title">自動駕駛視覺感知</div>
-                            <div class="case-card__desc">自動駕駛車輛搭載多個攝影機，利用深度神經網路即時辨識路上的行人、車輛、交通號誌、車道線等，是安全行駛的視覺基礎；CNN 曾是這類視覺感知系統的重要核心架構之一。</div>
+                            <div class="case-card__desc">自動駕駛車輛搭載多個攝影機，利用深度神經網路即時辨識路上的行人、車輛、交通號誌、車道線等，是安全行駛的視覺基礎；CNN
+                                曾是這類視覺感知系統的重要核心架構之一。</div>
                         </div>
                         <div class="case-card__img-wrap">
                             <img class="case-card__img" src="assets/CASE_06.jpg" alt="自動駕駛" loading="lazy">
@@ -1707,7 +1715,8 @@
                         <div class="case-card__content">
                             <div class="case-card__emoji">🔒</div>
                             <div class="case-card__title">人臉辨識與生物識別</div>
-                            <div class="case-card__desc">CNN 能從人臉影像中學習高維度的臉部特徵表示，在不同角度、光線或部分遮擋的條件下仍可提升辨識穩健性，應用於手機解鎖、機場安檢、金融支付驗證等高安全性場景。</div>
+                            <div class="case-card__desc">CNN
+                                能從人臉影像中學習高維度的臉部特徵表示，在不同角度、光線或部分遮擋的條件下仍可提升辨識穩健性，應用於手機解鎖、機場安檢、金融支付驗證等高安全性場景。</div>
                         </div>
                         <div class="case-card__img-wrap">
                             <img class="case-card__img" src="assets/CASE_07.jpg" alt="人臉辨識" loading="lazy">
@@ -1717,7 +1726,8 @@
                         <div class="case-card__content">
                             <div class="case-card__emoji">🏭</div>
                             <div class="case-card__title">工業品質檢測</div>
-                            <div class="case-card__desc">在製造業中，CNN 被用來自動檢查產品表面是否存在瑕疵，例如晶片電路的缺陷、布料的織紋不均勻等。相比人工目視，速度更快且不會因疲勞而降低準確率。</div>
+                            <div class="case-card__desc">在製造業中，CNN
+                                被用來自動檢查產品表面是否存在瑕疵，例如晶片電路的缺陷、布料的織紋不均勻等。相比人工目視，速度更快且不會因疲勞而降低準確率。</div>
                         </div>
                         <div class="case-card__img-wrap">
                             <img class="case-card__img" src="assets/CASE_08.webp" alt="工業品質檢測" loading="lazy">
@@ -1727,7 +1737,8 @@
                         <div class="case-card__content">
                             <div class="case-card__emoji">🌾</div>
                             <div class="case-card__title">智慧農業與環境監測</div>
-                            <div class="case-card__desc">利用無人機拍攝農田影像，透過 CNN 模型分析農作物生長狀況、辨識病蟲害，甚至能區分雜草以進行精準噴灑。在環保方面，也能透過影像自動追蹤森林砍伐面積或海洋塑膠垃圾。</div>
+                            <div class="case-card__desc">利用無人機拍攝農田影像，透過 CNN
+                                模型分析農作物生長狀況、辨識病蟲害，甚至能區分雜草以進行精準噴灑。在環保方面，也能透過影像自動追蹤森林砍伐面積或海洋塑膠垃圾。</div>
                         </div>
                         <div class="case-card__img-wrap">
                             <img class="case-card__img" src="assets/CASE_09.jpg" alt="智慧農業" loading="lazy">
@@ -1737,7 +1748,8 @@
                         <div class="case-card__content">
                             <div class="case-card__emoji">🛒</div>
                             <div class="case-card__title">智慧零售與無人商店</div>
-                            <div class="case-card__desc">如 Amazon Go 透過店內密布的攝影機，運用 CNN 即時追蹤顧客移動軌跡及拿取商品的動作，實現「拿了就走」的無感結帳體驗，同時協助分析店內客流熱區。</div>
+                            <div class="case-card__desc">如 Amazon Go 透過店內密布的攝影機，運用 CNN
+                                即時追蹤顧客移動軌跡及拿取商品的動作，實現「拿了就走」的無感結帳體驗，同時協助分析店內客流熱區。</div>
                         </div>
                         <div class="case-card__img-wrap">
                             <img class="case-card__img" src="assets/CASE_10.jpg" alt="智慧零售" loading="lazy">
@@ -1868,7 +1880,8 @@
                         </div>
                     </div>
                     <p style="font-size:.88rem;color:var(--clr-text-muted);line-height:1.85;margin-bottom:18px;">
-                        傳統 CNN 容易偏向判斷「某個特徵是否出現」，但對<strong>特徵之間的相對空間關係</strong>不一定有穩定表徵。常見的思想實驗是：若將一張人臉照片中眼睛與嘴巴的位置互換，部分 CNN
+                        傳統 CNN 容易偏向判斷「某個特徵是否出現」，但對<strong>特徵之間的相對空間關係</strong>不一定有穩定表徵。常見的思想實驗是：若將一張人臉照片中眼睛與嘴巴的位置互換，部分
+                        CNN
                         仍可能判斷它接近「人臉」——因為許多局部臉部特徵依然存在，只是位置關係錯誤。
                     </p>
                     <div class="problems-list" style="gap:10px;margin-bottom:18px;">
